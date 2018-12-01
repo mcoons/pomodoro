@@ -1,0 +1,40 @@
+#container{
+    margin:0;
+    padding:0;
+    position: relative;
+    border: 1px blue solid;
+    background-color: blue;
+}
+
+#clockface {
+    margin:0;
+    padding:0;
+    border: 1px red solid;
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    background-color: white;
+}
+/* 
+#hrhand{
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%,0);
+    background-color: black;
+}
+
+#minhand{
+    position: absolute;
+    left: 50%; 
+     transform: translate(-50%,0);
+
+    background-color: orange;
+}
+#sechand{
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%,0);
+
+    background-color: red;
+} */
+
