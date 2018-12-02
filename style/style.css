@@ -1,6 +1,6 @@
 #appcontainer{
     position: relative;
-    background: url("/images/back1.jpeg");
+    background: url("../images/back1.jpeg");
     background-size: contain;
     border: 1px brown solid;
     border-top-left-radius: 180px;
@@ -16,7 +16,7 @@
 
 #clockcontainer{
     position: relative;
-    background: url("/images/ring.png");
+    background: url("../images/ring.png");
     background-size: contain;
 }
 
@@ -73,7 +73,7 @@ margin-bottom: 0;
     transform: translate(-50%);
     color:white;
     font-weight: bold;
-    background: url("/images/back1.jpeg");
+    background: url("../images/back1.jpeg");
     border: 1px solid black; 
     overflow:hidden;
     /* padding: 15px; */
