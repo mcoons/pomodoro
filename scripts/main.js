@@ -9,6 +9,8 @@ var workLength = 25;  // minutes
 var restLength = 5;   // minutes
 var working = resting = false;
 
+var alarm1 = alarm2 = alarm3 = alarm4 = null;
+
 var workStartRotation = workEndRotation = restStartRotation = restEndRotation = null;
 var workStartTime = workEndTime = restStartTime = restEndTime = null;
 
@@ -58,6 +60,10 @@ function refreshClock(){
     // if (!workStartRotation) workStartRotation = minRotation;
 
     drawHands(hrRotation, minRotation, secRotation);
+
+    if (working && workEndTime < baseTime && !alarm1) alarm1 = soundAlarm1();
+    if (resting && restEndTime < baseTime && !alarm2) alarm2 = soundAlarm2();
+    
 
     if (working || resting)
         drawOverlays(workStartRotation, workEndRotation, restStartRotation, restEndRotation);
@@ -173,6 +179,8 @@ function optionButtonClick(){
 
 function workButtonClick(){
     soundClick();
+    stopSounds();
+
     working=true; 
     resting=false; 
 
@@ -198,6 +206,8 @@ function workButtonClick(){
 
 function restButtonClick(){
     soundClick();
+    stopSounds();
+
     resting=true; 
     working=false; 
 
@@ -223,6 +233,8 @@ function restButtonClick(){
 
 function clearButtonClick(){
     soundClick();
+    stopSounds();
+
     resting=false; 
     working=false;
 }
@@ -233,4 +245,27 @@ function workLengthChange(){
 
 function restLengthChange(){
 
+}
+
+function toggleAlarm1(){
+    if (alarm1) {sound_alarm1.stop(); alarm1 = null;} else alarm1 = soundAlarm1();
+}
+
+function toggleAlarm2(){
+    if (alarm2) {sound_alarm2.stop(); alarm2 = null;} else alarm2 = soundAlarm2();
+}
+
+function toggleAlarm3(){
+    if (alarm3) {sound_alarm3.stop(); alarm3 = null;} else alarm3 = soundAlarm3();
+}
+
+function toggleAlarm4(){
+    if (alarm4) {sound_alarm4.stop(); alarm4 = null;} else alarm4 = soundAlarm4();
+}
+
+function stopSounds(){
+    if (alarm1) {sound_alarm1.stop(); alarm1 = null;} 
+    if (alarm2) {sound_alarm2.stop(); alarm2 = null;} 
+    if (alarm3) {sound_alarm3.stop(); alarm3 = null;} 
+    if (alarm4) {sound_alarm4.stop(); alarm4 = null;} 
 }
