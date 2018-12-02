@@ -1,7 +1,5 @@
 <!DOCTYPE html>
 <html lang="en-US">
-
-    
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,40 +8,34 @@
     <script src="scripts/main.js" defer></script>
     <script src="scripts/howler.js" defer></script>
     <script src="scripts/sounds.js" defer></script>
-
 </head>
-
 <body>
-<main id="main">
+    <main id="main">
+        <div id="appcontainer">
+            <div id="clockcontainer">
+                <canvas id="clockface"></canvas>
+                <canvas id="hands"></canvas>
+                <canvas id="overlay"></canvas>
+                
+            </div>
 
-    <div id="appcontainer">
-        <div id="clockcontainer">
-            <canvas id="clockface"></canvas>
-            <canvas id="hands"></canvas>
-            <canvas id="overlay"></canvas>
+            <form>
+                <button onclick="workButtonClick(); return false;" >Start Working</button>
+                <button onclick="restButtonClick(); return false;">Start Breaking</button>
+                <button onclick="clearButtonClick(); return false;">Clear</button>
+                <button onclick="optionButtonClick(); return false;">Options</button>
+            </form>
             
+            <div id="optionsmodal">
+                <input id="workLengthInput" type="number" min="15" max="30" step="5">
+                <label> - Work Length</label>
+                <br>
+                <input id="restLengthInput" type="number" min="5" max="15" step="5">
+                <label> - Rest Length</label>
+                <br><br>
+                <button id="saveOptionsButton" onclick="saveOptionsButtonClick(); return false;">Finished</button>
+            </div>
         </div>
-
-        <form>
-            <button onclick="workButtonClick(); return false;" >Start Working</button>
-            <button onclick="restButtonClick(); return false;">Start Breaking</button>
-            <button onclick="clearButtonClick(); return false;">Clear</button>
-            <button onclick="optionButtonClick(); return false;">Options</button>
-        </form>
-        
-        <div id="optionsmodal">
-            <input id="workLengthInput" type="number" min="15" max="30" step="5">
-            <label> - Work Length</label>
-            <br>
-            <input id="restLengthInput" type="number" min="5" max="15" step="5">
-            <label> - Rest Length</label>
-            <br><br>
-            <button id="saveOptionsButton" onclick="saveOptionsButtonClick(); return false;">Finished</button>
-
-        </div>
-
-
-    </div>
-</main>
+    </main>
 </body>
 </html>

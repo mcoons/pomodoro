@@ -5,8 +5,8 @@ var centerX = centerY = CLOCKWIDTH/2;
 var overlayAlpha = .3;
 var workColor = "rgba(0, 250, 0, " + overlayAlpha + ")"; 
 var restColor = "rgba(250, 0, 0, " + overlayAlpha + ")"; 
-var workLength = 1;  // minutes
-var restLength = 1;   // minutes
+var workLength = 25;  // minutes
+var restLength = 5;   // minutes
 var working = resting = false;
 
 var workStartRotation = workEndRotation = restStartRotation = restEndRotation = null;
@@ -268,7 +268,7 @@ function saveOptionsButtonClick(){
     if (newWorkLength != workLength ) {
         workLength = newWorkLength;
     }
-    
+
 
     let newRestLength = document.getElementById("restLengthInput").value;
     if (newRestLength != restLength ) {
