@@ -1,7 +1,6 @@
 var alarm1 = alarm2 = alarm3 = alarm4 = null;
 
 
-
 // click
 var sound_click = new Howl({src: ['../sounds/click.wav']});
 function soundClick(){sound_click.volume(.15); sound_click.play()}
