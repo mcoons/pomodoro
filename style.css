@@ -1,5 +1,6 @@
 #appcontainer{
-    background: url("./back1.jpeg");
+    position: relative;
+    background: url("./images/back1.jpeg");
     background-size: contain;
     border: 1px brown solid;
     border-top-left-radius: 180px;
@@ -9,11 +10,13 @@
     margin-left: auto;
     margin-right: auto;
     padding:5px;
+    overflow:hidden;
+
 }
 
 #clockcontainer{
     position: relative;
-    background: url("./ring.png");
+    background: url("./images/ring.png");
     background-size: contain;
 }
 
@@ -52,4 +55,29 @@ button {
     border-left: 2px solid rgb(172, 172, 172);
     border-right: 2px solid rgb(100, 100, 100);
     background: linear-gradient(to bottom right, rgb(235, 244, 255), rgb(192, 220, 255));
+}
+
+input {
+margin: 10px;
+margin-bottom: 0;
+}
+
+#optionsmodal {
+    position: absolute;
+    z-index: 20;
+    bottom: 0px;
+    height: 120px;
+    width: 300px;
+    left: 50%;
+    transform: translate(-50%);
+    color:white;
+    font-weight: bold;
+    background: url("./images/back1.jpeg");
+    border: 1px solid black; 
+    overflow:hidden;
+    /* padding: 15px; */
+    transition: 1s;
+    margin-bottom: -130px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
 }

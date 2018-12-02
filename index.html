@@ -6,8 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Pomodoro Clock</title>
     <link rel="stylesheet" href="style.css" type="text/css" media="all">
-    <script src="ClockFace.js" defer></script>
-    <script src="script.js" defer></script>
+    <script src="./scripts/main.js" defer></script>
 </head>
 
 <body>
@@ -22,11 +21,25 @@
         </div>
 
         <form>
-                <button>Start Working</button>
-                <button>Start Breaking</button>
-                <button>Clear</button>
-                <button>Options</button>
-                </form>
+            <button onclick="workButtonClick(); return false;" >Start Working</button>
+            <button onclick="restButtonClick(); return false;">Start Breaking</button>
+            <button onclick="clearButtonClick(); return false;">Clear</button>
+            <!-- <button onclick="document.getElementById('optionsmodal').style.marginBottom='0'; return false;">Options</button> -->
+            <button onclick="optionButtonClick(); return false;">Options</button>
+        </form>
+        
+        <div id="optionsmodal">
+            <input id="workLengthInput" type="number" min="15" max="30" step="5">
+            <label> - Work Length</label>
+            <br>
+            <input id="restLengthInput" type="number" min="5" max="15" step="5">
+            <label> - Rest Length</label>
+            <br>
+            <button onclick="document.getElementById('optionsmodal').style.marginBottom='-130px'; return false;">Save</button>
+
+        </div>
+
+
     </div>
 </main>
 </body>
