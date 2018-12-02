@@ -167,10 +167,12 @@ function drawOverlay(ctx, start, end, color){
 }
 
 function optionButtonClick(){
+    soundClick();
     document.getElementById('optionsmodal').style.marginBottom='0'; 
 }
 
 function workButtonClick(){
+    soundClick();
     working=true; 
     resting=false; 
 
@@ -195,6 +197,7 @@ function workButtonClick(){
 }
 
 function restButtonClick(){
+    soundClick();
     resting=true; 
     working=false; 
 
@@ -219,6 +222,7 @@ function restButtonClick(){
 }
 
 function clearButtonClick(){
+    soundClick();
     resting=false; 
     working=false;
 }
