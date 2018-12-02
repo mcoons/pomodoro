@@ -1,50 +1,60 @@
-#container{
-    margin:0;
-    /* padding:10px; */
+#appcontainer{
+    /* position: relative; */
+    outline: 1px brown solid;
+    background: url("./back1.jpeg");
+    /* background-image: url("./ring.png"); */
+    background-size: contain;
+    padding:20px;
+}
+
+#clockcontainer{
     position: relative;
-    outline: 1px blue solid;
-    /* background-color: blue; */
+    /* outline: 1px blue solid; */
+    background: url("./ring.png");
+    /* background-image: url("./ring.png"); */
+    background-size: contain;
 }
 
 #clockface {
-    margin:0;
-    /* padding:10px; */
-    outline: 1px red solid;
+    /* outline: 1px green solid; */
     position: absolute;
     top: 50%; left: 50%;
     transform: translate(-50%,-50%);
-    background-color: white;
+    /* background-color: white; */
 }
 
 #hands {
-    margin:0;
-    /* padding:10px; */
-    outline: 1px red solid;
+    /* outline: 1px red solid; */
     position: absolute;
     top: 50%; left: 50%;
     transform: translate(-50%,-50%);
     z-index: 10;
 }
-/* 
-#hrhand{
+
+#overlay {
+    /* outline: 1px purple solid; */
     position: absolute;
-    left: 50%;
-    transform: translate(-50%,0);
-    background-color: black;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    z-index: 15;
 }
 
-#minhand{
-    position: absolute;
-    left: 50%; 
-     transform: translate(-50%,0);
-
-    background-color: orange;
+form {
+    text-align: center;
 }
-#sechand{
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%,0);
 
-    background-color: red;
-} */
+button {
+    margin: 10px;
+    width: 150px;
+    height: 40px;
+    /* box-shadow: 7px 7px 8px #888888, 7px 7px 8px #ffffff inset, -5px -5px 6px #7796b3 inset; */
+    box-shadow: 7px 7px 8px #ffffff inset, -5px -5px 6px #7796b3 inset;
+    border-radius: 10px;
+    border-top: 1px solid rgb(201, 201, 201);
+    border-bottom: 1px solid rgb(100, 100, 100);
+    border-left: 1px solid rgb(201, 201, 201);
+    border-right: 1px solid rgb(100, 100, 100);
+    background: linear-gradient(to bottom right, rgb(235, 244, 255), rgb(192, 220, 255));
 
+
+}

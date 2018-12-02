@@ -6,28 +6,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Pomodoro Clock</title>
     <link rel="stylesheet" href="style.css" type="text/css" media="all">
+    <script src="ClockFace.js" defer></script>
     <script src="script.js" defer></script>
 </head>
 
 <body>
 <main id="main">
 
-    <div id="container">
-
+    <div id="appcontainer">
+        <div id="clockcontainer">
             <canvas id="clockface"></canvas>
             <canvas id="hands"></canvas>
+            <canvas id="overlay"></canvas>
+            
         </div>
-<!-- <div id="container"style="width:120px; height:120px">
-    <div id="clockface" style="width:100px; height:100px">
-            <div id="hrhand"  style="width:10px; height:60px"></div>
-            <div id="minhand" style="width:5px; height:50px"></div>
-            <div id="sechand" style="width:2px; height:40px"></div>        
+
+        <form>
+                <button>Start Working</button>
+                <button>Start Breaking</button>
+                <button>Clear</button>
+                <button>Options</button>
+                </form>
     </div>
-
-</div> -->
-
-
-
 </main>
 </body>
 </html>
