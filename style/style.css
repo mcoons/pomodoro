@@ -1,6 +1,6 @@
 #appcontainer{
     position: relative;
-    background: url("./images/back1.jpeg");
+    background: url("/images/back1.jpeg");
     background-size: contain;
     border: 1px brown solid;
     border-top-left-radius: 180px;
@@ -16,7 +16,7 @@
 
 #clockcontainer{
     position: relative;
-    background: url("./images/ring.png");
+    background: url("/images/ring.png");
     background-size: contain;
 }
 
@@ -59,6 +59,7 @@ button {
 
 input {
 margin: 10px;
+margin-top: 15px;
 margin-bottom: 0;
 }
 
@@ -66,18 +67,18 @@ margin-bottom: 0;
     position: absolute;
     z-index: 20;
     bottom: 0px;
-    height: 120px;
+    height: 150px;
     width: 300px;
     left: 50%;
     transform: translate(-50%);
     color:white;
     font-weight: bold;
-    background: url("./images/back1.jpeg");
+    background: url("/images/back1.jpeg");
     border: 1px solid black; 
     overflow:hidden;
     /* padding: 15px; */
     transition: 1s;
-    margin-bottom: -130px;
+    margin-bottom: -150px;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
 }

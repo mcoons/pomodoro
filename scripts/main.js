@@ -5,18 +5,16 @@ var centerX = centerY = CLOCKWIDTH/2;
 var overlayAlpha = .3;
 var workColor = "rgba(0, 250, 0, " + overlayAlpha + ")"; 
 var restColor = "rgba(250, 0, 0, " + overlayAlpha + ")"; 
-var workLength = 25;  // minutes
-var restLength = 5;   // minutes
+var workLength = 1;  // minutes
+var restLength = 1;   // minutes
 var working = resting = false;
-
-var alarm1 = alarm2 = alarm3 = alarm4 = null;
 
 var workStartRotation = workEndRotation = restStartRotation = restEndRotation = null;
 var workStartTime = workEndTime = restStartTime = restEndTime = null;
 
 var appcontainer = document.getElementById("appcontainer");
 appcontainer.style.width = BOXWIDTH+"px";
-appcontainer.style.height = BOXWIDTH+120+"px";
+appcontainer.style.height = BOXWIDTH+150+"px";
 
 var container = document.getElementById("clockcontainer");
 container.style.width = container.style.height = BOXWIDTH+"px";
@@ -52,18 +50,10 @@ function refreshClock(){
     var minRotation = ((min*360/60)+(sec*(360/60)/60))*Math.PI/180;
     var secRotation = (sec*360/60)*Math.PI/180;
 
-    // var workStart = new Date(baseTime.getTime());
-    // var restStart = new Date(baseTime.getTime());
-    // var newRestMinutes = restStart.getMinutes() + workLength;
-    // restStart.setMinutes(newRestMinutes);
-    
-    // if (!workStartRotation) workStartRotation = minRotation;
-
     drawHands(hrRotation, minRotation, secRotation);
 
     if (working && workEndTime < baseTime && !alarm1) alarm1 = soundAlarm1();
     if (resting && restEndTime < baseTime && !alarm2) alarm2 = soundAlarm2();
-    
 
     if (working || resting)
         drawOverlays(workStartRotation, workEndRotation, restStartRotation, restEndRotation);
@@ -172,24 +162,13 @@ function drawOverlay(ctx, start, end, color){
     ctx.fill();
 }
 
-function optionButtonClick(){
-    soundClick();
-    document.getElementById('optionsmodal').style.marginBottom='0'; 
-}
-
-function workButtonClick(){
-    soundClick();
-    stopSounds();
-
-    working=true; 
-    resting=false; 
-
-    let baseTime = new Date();
+function calculateWorkRestRotations(starting){
+    let baseTime = new Date(starting.getTime());
     let sec = baseTime.getSeconds();
 
     workStartTime = new Date(baseTime.getTime());
-    workEndTime = new Date(baseTime.getTime());
-    let newWorkMinutes = workEndTime.getMinutes() + workLength;
+    workEndTime = new Date(workStartTime.getTime());
+    let newWorkMinutes = workEndTime.getMinutes() + Number(workLength);
     workEndTime.setMinutes(newWorkMinutes);
 
     workStartRotation = ((workStartTime.getMinutes()*360/60)+(sec*(360/60)/60))*Math.PI/180 - Math.PI/2;
@@ -197,38 +176,78 @@ function workButtonClick(){
 
     restStartTime = new Date(workEndTime.getTime());
     restEndTime = new Date(restStartTime.getTime());
-    let newRestMinutes = restEndTime.getMinutes() + restLength;
+    let newRestMinutes = restEndTime.getMinutes() + Number(restLength);
     restEndTime.setMinutes(newRestMinutes);
 
     restStartRotation = ((restStartTime.getMinutes()*360/60)+(sec*(360/60)/60))*Math.PI/180 - Math.PI/2;
     restEndRotation = ((restEndTime.getMinutes()*360/60)+(sec*(360/60)/60))*Math.PI/180 - Math.PI/2;
+
 }
 
-function restButtonClick(){
-    soundClick();
-    stopSounds();
-
-    resting=true; 
-    working=false; 
-
-    let baseTime = new Date();
+function calculateRestWorkRotations(starting){
+    let baseTime = new Date(starting);
     let sec = baseTime.getSeconds();
 
+    console.log("baseTime: ", baseTime);
+
     restStartTime = new Date(baseTime.getTime());
-    restEndTime = new Date(baseTime.getTime());
-    let newRestMinutes = restEndTime.getMinutes() + restLength;
+    restEndTime = new Date(restStartTime.getTime());
+    console.log("first restEndTime: ",restEndTime);
+
+    console.log("restEndTime minutes: ",restEndTime.getMinutes())
+    let newRestMinutes = restEndTime.getMinutes() + Number(restLength);
+    console.log("newRestMinutes: ", newRestMinutes);
+
     restEndTime.setMinutes(newRestMinutes);
+
+    console.log("restStartTime: ",restStartTime);
+    console.log("restEndTime: ",restEndTime);
 
     restStartRotation = ((restStartTime.getMinutes()*360/60)+(sec*(360/60)/60))*Math.PI/180 - Math.PI/2;
     restEndRotation = ((restEndTime.getMinutes()*360/60)+(sec*(360/60)/60))*Math.PI/180 - Math.PI/2;
 
     workStartTime = new Date(restEndTime.getTime());
     workEndTime = new Date(workStartTime.getTime());
-    let newWorkMinutes = workEndTime.getMinutes() + workLength;
+    let newWorkMinutes = workEndTime.getMinutes() + Number(workLength);
     workEndTime.setMinutes(newWorkMinutes);
 
     workStartRotation = ((workStartTime.getMinutes()*360/60)+(sec*(360/60)/60))*Math.PI/180 - Math.PI/2;
     workEndRotation = ((workEndTime.getMinutes()*360/60)+(sec*(360/60)/60))*Math.PI/180 - Math.PI/2;
+}
+
+function optionButtonClick(){
+    soundClick();
+    document.getElementById('optionsmodal').style.marginBottom='0'; 
+}
+
+function workButtonClick(){
+
+    console.log("-------------------------");
+    console.log("workLength: ", workLength);
+    console.log("restLength: ", restLength);
+
+    soundClick();
+    stopSounds();
+
+    working=true; 
+    resting=false; 
+
+    calculateWorkRestRotations(new Date());
+}
+
+function restButtonClick(){
+
+    console.log("-------------------------");
+    console.log("workLength: ", workLength);
+    console.log("restLength: ", restLength);
+
+    soundClick();
+    stopSounds();
+
+    resting=true; 
+    working=false; 
+
+    calculateRestWorkRotations(new Date());
 }
 
 function clearButtonClick(){
@@ -239,33 +258,34 @@ function clearButtonClick(){
     working=false;
 }
 
+function saveOptionsButtonClick(){
+    soundClick();
+
+    document.getElementById('optionsmodal').style.marginBottom='-150px';
+
+    let newWorkLength = document.getElementById("workLengthInput").value;
+    if (newWorkLength != workLength ) {
+        workLength = newWorkLength;
+    }
+
+    let newRestLength = document.getElementById("restLengthInput").value;
+    if (newRestLength != restLength ) {
+        restLength = newRestLength;
+    }
+
+    if (working){
+        calculateWorkRestRotations(new Date(workStartTime));
+    }
+
+    if (resting){
+        calculateRestWorkRotations(new Date(restStartTime));
+    }    
+}
+
 function workLengthChange(){
 
 }
 
 function restLengthChange(){
 
-}
-
-function toggleAlarm1(){
-    if (alarm1) {sound_alarm1.stop(); alarm1 = null;} else alarm1 = soundAlarm1();
-}
-
-function toggleAlarm2(){
-    if (alarm2) {sound_alarm2.stop(); alarm2 = null;} else alarm2 = soundAlarm2();
-}
-
-function toggleAlarm3(){
-    if (alarm3) {sound_alarm3.stop(); alarm3 = null;} else alarm3 = soundAlarm3();
-}
-
-function toggleAlarm4(){
-    if (alarm4) {sound_alarm4.stop(); alarm4 = null;} else alarm4 = soundAlarm4();
-}
-
-function stopSounds(){
-    if (alarm1) {sound_alarm1.stop(); alarm1 = null;} 
-    if (alarm2) {sound_alarm2.stop(); alarm2 = null;} 
-    if (alarm3) {sound_alarm3.stop(); alarm3 = null;} 
-    if (alarm4) {sound_alarm4.stop(); alarm4 = null;} 
 }
