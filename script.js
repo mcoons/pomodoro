@@ -1,38 +1,29 @@
 
-let WIDTH = 300;
-let BOXWIDTH = 360;
-let CLOCKWIDTH = 300;
-var centerX = centerY = WIDTH/2;
+// let WIDTH = 300;
+let BOXWIDTH = 320;
+let CLOCKWIDTH = BOXWIDTH-50;
+var centerX = centerY = CLOCKWIDTH/2;
 
 var appcontainer = document.getElementById("appcontainer");
 appcontainer.style.width = BOXWIDTH+"px";
 appcontainer.style.height = BOXWIDTH+120+"px";
 
-
 var container = document.getElementById("clockcontainer");
 container.style.width = BOXWIDTH+"px";
 container.style.height = BOXWIDTH+"px";
-// container.width = WIDTH+WIDTH/20;
-// container.height = WIDTH+WIDTH/20;
 
 var clockFace = document.getElementById("clockface");
 var faceCtx = clockFace.getContext("2d");
-// clockFace.style.width = WIDTH+12+"px";
-// clockFace.style.height = WIDTH+12+"px";
 clockFace.width = CLOCKWIDTH;
 clockFace.height = CLOCKWIDTH;
 
 var hands = document.getElementById("hands");
 var handsCtx = hands.getContext("2d");
-// hands.style.width = WIDTH+12+"px";
-// hands.style.height = WIDTH+12+"px";
 hands.width = CLOCKWIDTH;
 hands.height = CLOCKWIDTH;
 
 var overlay = document.getElementById("overlay");
 var overlayCtx = hands.getContext("2d");
-// hands.style.width = WIDTH+12+"px";
-// hands.style.height = WIDTH+12+"px";
 overlay.width = CLOCKWIDTH;
 overlay.height = CLOCKWIDTH;
 
@@ -42,9 +33,10 @@ var workColor = "rgba(0, 250, 0, " + overlayAlpha + ")";
 var restColor = "rgba(250, 0, 0, " + overlayAlpha + ")"; 
 var workLength = 20;  // minutes
 var rest = 5;   // minutes
+var working = false;
+var resting = false;
 
 var workStartRotation = null;
-
 
 drawFace();
 
@@ -73,12 +65,15 @@ function refreshClock(){
 
     drawHands(hrRotation, minRotation, secRotation);
 
-    drawOverlays(workStartRotation);
+    if (working || resting)
+        drawOverlays(workStartRotation);
 
 }
 
+
+
 function drawFace(){
-    faceCtx.font = "30px Serif";
+    faceCtx.font = CLOCKWIDTH/10 + "px Serif";
     
     // draw circle
     faceCtx.beginPath();
@@ -94,8 +89,8 @@ function drawFace(){
     for (let rad = 0; rad < 2*Math.PI; rad+=2*Math.PI/60) {
         let x1 = Math.cos(rad)*CLOCKWIDTH/2+CLOCKWIDTH/2
         let y1 = Math.sin(rad)*CLOCKWIDTH/2+CLOCKWIDTH/2
-        let x2 = Math.cos(rad)*(CLOCKWIDTH/2-CLOCKWIDTH/120)+CLOCKWIDTH/2
-        let y2 = Math.sin(rad)*(CLOCKWIDTH/2-CLOCKWIDTH/120)+CLOCKWIDTH/2
+        let x2 = Math.cos(rad)*(CLOCKWIDTH/2-CLOCKWIDTH/72)+CLOCKWIDTH/2
+        let y2 = Math.sin(rad)*(CLOCKWIDTH/2-CLOCKWIDTH/72)+CLOCKWIDTH/2
         faceCtx.moveTo(x1,y1)
         faceCtx.lineTo(x2,y2);
         faceCtx.lineWidth=1;
@@ -107,15 +102,15 @@ function drawFace(){
     for (let rad = 0; rad < 2*Math.PI; rad+=2*Math.PI/12) {
         let x1 = Math.cos(rad)*CLOCKWIDTH/2+CLOCKWIDTH/2
         let y1 = Math.sin(rad)*CLOCKWIDTH/2+CLOCKWIDTH/2
-        let x2 = Math.cos(rad)*(CLOCKWIDTH/2-CLOCKWIDTH/40)+CLOCKWIDTH/2
-        let y2 = Math.sin(rad)*(CLOCKWIDTH/2-CLOCKWIDTH/40)+CLOCKWIDTH/2
+        let x2 = Math.cos(rad)*(CLOCKWIDTH/2-CLOCKWIDTH/48)+CLOCKWIDTH/2
+        let y2 = Math.sin(rad)*(CLOCKWIDTH/2-CLOCKWIDTH/48)+CLOCKWIDTH/2
         faceCtx.moveTo(x1,y1)
         faceCtx.lineTo(x2,y2);
         faceCtx.lineWidth=CLOCKWIDTH/120;  // 5 = 600/120
         faceCtx.stroke();
     }
 
-    // draw 15 minute ticks
+    //  draw 15 minute ticks
     faceCtx.beginPath();
     for (let rad = 0; rad < 2*Math.PI; rad+=2*Math.PI/4) {
         let x1 = Math.cos(rad)*CLOCKWIDTH/2+CLOCKWIDTH/2
@@ -126,8 +121,39 @@ function drawFace(){
         faceCtx.lineTo(x2,y2);
         faceCtx.lineWidth=CLOCKWIDTH/60;  // 10 = 600/60
         faceCtx.stroke();
-
     }
+
+
+    // faceCtx.beginPath();
+    // for (let degrees = 0; degrees < 360; degrees+=6) {
+        
+    //     let lineWidth = 1;
+    //     let lineLength = CLOCKWIDTH/120;
+
+    //     let rad = degrees*Math.PI/180;
+
+    //     // if (!degrees%90) {
+    //     //     lineLength = CLOCKWIDTH/40;
+    //     //     lineWidth = CLOCKWIDTH/120;
+    //     // }
+    //     // else 
+    //     if (!degrees === 0 || degrees === 90 || degrees === 180 || degrees === 270) {
+    //         lineLength = CLOCKWIDTH/24;
+    //         lineWidth = CLOCKWIDTH/60;
+    //     }
+        
+    //     let x1 = Math.cos(rad)*CLOCKWIDTH/2+CLOCKWIDTH/2;
+    //     let y1 = Math.sin(rad)*CLOCKWIDTH/2+CLOCKWIDTH/2;
+
+    //     let x2 = Math.cos(rad)*(CLOCKWIDTH/2-lineLength)+CLOCKWIDTH/2
+    //     let y2 = Math.sin(rad)*(CLOCKWIDTH/2-lineLength)+CLOCKWIDTH/2
+        
+    //     faceCtx.moveTo(x1,y1)
+    //     faceCtx.lineTo(x2,y2);
+    //     faceCtx.lineWidth=lineWidth;
+    //     faceCtx.stroke();
+
+    // }
 
     // Draw face text
     faceCtx.fillStyle = '#967A45';
@@ -147,29 +173,6 @@ function drawFace(){
 function drawHands(hrRotation, minRotation, secRotation){
     handsCtx.clearRect(0, 0, CLOCKWIDTH, CLOCKWIDTH);
 
-    // let centerX = centerY = CLOCKWIDTH/2;
-    
-    // let baseTime = new Date();
-
-    // let hr = baseTime.getHours();
-    // let min = baseTime.getMinutes();
-    // let sec = baseTime.getSeconds();
-    // let milliSec = baseTime.getMilliseconds();
-    // sec += milliSec/1000;
-
-    // let hrRotation = (hr*360/12+(min*(360/60)/12))*Math.PI/180;
-    // let minRotation = ((min*360/60)+(sec*(360/60)/60))*Math.PI/180;
-    // let secRotation = (sec*360/60)*Math.PI/180;
-
-
-    // let workStart = new Date(baseTime.getTime());
-    // let restStart = new Date(baseTime.getTime());
-    // let newRestMinutes = restStart.getMinutes() + workLength;
-    // restStart.setMinutes(newRestMinutes);
-    
-    // drawOverlays(minRotation);
-
-
     // HOUR HAND
     // Matrix transformation
     handsCtx.resetTransform();
@@ -178,7 +181,7 @@ function drawHands(hrRotation, minRotation, secRotation){
     handsCtx.translate(-centerX, -centerY);
     // Rotated rectangle
     handsCtx.fillStyle = 'black';
-    handsCtx.fillRect(centerX-2.5, centerY, 5, -CLOCKWIDTH/2+50);
+    handsCtx.fillRect(centerX-2.5, centerY, 5, -CLOCKWIDTH/2+CLOCKWIDTH/6);
 
     // MINUTE HAND
     // Matrix transformation
@@ -188,7 +191,7 @@ function drawHands(hrRotation, minRotation, secRotation){
     handsCtx.translate(-centerX, -centerY);
     // Rotated rectangle
     handsCtx.fillStyle = 'black';
-    handsCtx.fillRect(centerX-1.5, centerY, 3, -CLOCKWIDTH/2+20);
+    handsCtx.fillRect(centerX-1.5, centerY, 3, -CLOCKWIDTH/2+CLOCKWIDTH/15);
 
     // MINUTE HAND AXEL CIRCLE
     handsCtx.resetTransform();
@@ -208,7 +211,7 @@ function drawHands(hrRotation, minRotation, secRotation){
     handsCtx.translate(-centerX, -centerY);
     // Rotated rectangle
     handsCtx.fillStyle = 'red';
-    handsCtx.fillRect(centerX-.5, centerY, 1, -CLOCKWIDTH/2+10);
+    handsCtx.fillRect(centerX-.5, centerY, 1, -CLOCKWIDTH/2+CLOCKWIDTH/30);
 
     // SECOND HAND AXIS CIRCLE
     handsCtx.resetTransform();
@@ -226,7 +229,6 @@ function drawOverlays(minRotation){
     drawOverlay(overlayCtx, minRotation - Math.PI/2, workLength/60*360*Math.PI/180, workColor);
     drawOverlay(overlayCtx, minRotation - Math.PI/2 + workLength/60*360*Math.PI/180, rest/60*360*Math.PI/180, restColor);
 }
-
 
 function drawOverlay(ctx, start, length, color){
     ctx.beginPath();
