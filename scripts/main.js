@@ -261,12 +261,14 @@ function clearButtonClick(){
 function saveOptionsButtonClick(){
     soundClick();
 
+
     document.getElementById('optionsmodal').style.marginBottom='-150px';
 
     let newWorkLength = document.getElementById("workLengthInput").value;
     if (newWorkLength != workLength ) {
         workLength = newWorkLength;
     }
+    
 
     let newRestLength = document.getElementById("restLengthInput").value;
     if (newRestLength != restLength ) {
