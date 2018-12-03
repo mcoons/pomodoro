@@ -1,6 +1,6 @@
 @font-face {
-    font-family: "ds-digital";
-    src: url("../fonts/ds-digib.woff") format('woff');
+    font-family: "lcd";
+    src: url("../fonts/LCD.woff") format('woff');
 }
 
 #appcontainer{
@@ -29,7 +29,25 @@
     position: absolute;
     top: 50%; left: 50%;
     transform: translate(-50%,-50%);
-    font-family: "ds-digital";
+    
+    /* font-family: "ds-digital"; */
+}
+
+#clockshadow{
+    position: absolute;
+    display:inline-block;
+    z-index: 5;
+
+    width:224px;
+    height:224px;
+
+    top: 28.2%; 
+    left: 50%;
+    transform: translate(-50%,-50%);
+
+    box-shadow: 5px 5px 5px rgba(70, 46, 0, 0.653), 7px 7px 8px rgba(0, 0, 0, 0.315) inset;
+    border-radius: 50%;
+    border: 16px solid rgba(255, 0, 0, 0);
 }
 
 .mydiv {
@@ -58,19 +76,13 @@ button {
     margin: 8px 4px 0 4px;
     width: 120px;
     height: 40px;
-    box-shadow: 7px 7px 8px #ffffff inset, -5px -5px 6px #7796b3 inset, 2px 2px 5px rgb(70, 45, 0);
+    box-shadow: 7px 7px 8px #ffffff inset, -5px -5px 6px #7796b3 inset, 2px 2px 8px rgb(70, 45, 0);
     border-radius: 10px;
     border-top: 2px solid rgb(172, 172, 172);
     border-bottom: 2px solid rgb(100, 100, 100);
     border-left: 2px solid rgb(172, 172, 172);
     border-right: 2px solid rgb(100, 100, 100);
     background: linear-gradient(to bottom right, rgb(235, 244, 255), rgb(192, 220, 255));
-}
-
-input {
-margin: 10px;
-margin-top: 15px;
-margin-bottom: 0;
 }
 
 #optionsModal, #instructionsModal {
@@ -88,29 +100,64 @@ margin-bottom: 0;
     border: 1px solid black; 
     overflow:hidden;
     transition: 1s;
-    margin-bottom: -210px;
+    margin-bottom: -215px;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     padding: 5px;
 }
 
+#optionsModal{
+    text-align: center;
+}
 
-
-#led {
+#lcd {
     color: black;
     background-color: rgb(206, 206, 206);
-    font-family: "ds-digital";
+    font-family: "lcd";
     font-size: 20px;
-    /* border: 2px solid black; */
+    width:235px;
+    height:40px;
     margin-left: 10px;
     margin-right: 10px;
     text-align: center;
-    /* border-top: 5px solid rgb(255, 244, 150);
-    border-bottom: 5px solid #9C8355;
-    border-left: 5px solid #F8F2C0;
-    border-right: 5px solid #9C8355;  */
     border: 5px solid black;
     border-image: radial-gradient(#9C8355 20%, #F8F2C0) 20;
-    box-shadow: 2px 2px 5px rgb(70, 45, 0), 1px 1px 1px black inset;
+    box-shadow: 3px 3px 5px rgb(70, 45, 0), 1px 1px 1px black inset;
     resize: none;
+}
+
+
+.slidecontainer {
+    width: 245px; /* Width of the outside container */
+}
+
+/* The slider itself */
+.slider {
+    -webkit-appearance: none; /* Override default CSS styles */
+    appearance: none;
+    width: 100%; /* Full-width */
+    height: 5px; /* Specified height */
+    background: #d3d3d3; /* Grey background */
+    outline: none; /* Remove outline */
+    box-shadow: 2px 2px 1px #787777 inset;
+    margin-bottom: 20px;
+}
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Override default look */
+    appearance: none;
+    width: 25px; /* Set a specific slider handle width */
+    height: 15px; /* Slider handle height */
+    background: #4CAF50; /* Green background */
+    background: linear-gradient(to bottom right, rgb(235, 244, 255), rgb(192, 220, 255));
+    box-shadow: 7px 7px 8px #eeeeee inset, -5px -5px 6px #7796b3 inset, 2px 2px 5px rgb(70, 45, 0);
+    border-radius: 10px;
+}
+
+.slider::-moz-range-thumb {
+    width: 55px; /* Set a specific slider handle width */
+    height: 35px; /* Slider handle height */
+    background: #4CAF50; /* Green background */
+    background: linear-gradient(to bottom right, rgb(235, 244, 255), rgb(192, 220, 255));
+    box-shadow: 7px 7px 8px #eeeeee inset, -5px -5px 6px #7796b3 inset, 2px 2px 5px rgb(70, 45, 0);
+    border-radius: 10px;
 }

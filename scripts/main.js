@@ -23,6 +23,9 @@ var clockFace = document.getElementById("clockface");
 var faceCtx = clockFace.getContext("2d");
 clockFace.width = clockFace.height = CLOCKWIDTH; 
 
+var clockShadow = document.getElementById("clockshadow");
+clockShadow.width = clockShadow.height = CLOCKWIDTH; 
+
 var hands = document.getElementById("hands");
 var handsCtx = hands.getContext("2d");
 hands.width = hands.height = CLOCKWIDTH;
@@ -31,8 +34,37 @@ var overlay = document.getElementById("overlay");
 var overlayCtx = hands.getContext("2d");
 overlay.width = overlay.height = CLOCKWIDTH;
 
-document.getElementById("workLengthInput").setAttribute("value", workLength);
-document.getElementById("restLengthInput").setAttribute("value", restLength);
+var workLengthSlider = document.getElementById("workLengthSlider");
+var workLengthLabel = document.getElementById("workLengthLabel");
+workLengthLabel.innerHTML = "Work Length: "+workLengthSlider.value; // Display the default slider value
+
+// Update the current slider value (each time you drag the slider handle)
+workLengthSlider.oninput = function() {
+    workLengthLabel.innerHTML = "Work Length: "+this.value;
+}
+
+var restLengthSlider = document.getElementById("restLengthSlider");
+var restLengthLabel = document.getElementById("restLengthLabel");
+restLengthLabel.innerHTML = "Break Length: "+restLengthSlider.value; // Display the default slider value
+
+// Update the current slider value (each time you drag the slider handle)
+restLengthSlider.oninput = function() {
+    restLengthLabel.innerHTML = "Break Length: "+this.value;
+}
+
+var volumeSlider = document.getElementById("volumeSlider");
+var volumeLabel = document.getElementById("volumeLabel");
+volumeLabel.innerHTML = "Volume: "+volumeSlider.value*100; // Display the default slider value
+
+// Update the current slider value (each time you drag the slider handle)
+volumeSlider.oninput = function() {
+    volumeLabel.innerHTML = "Volume: "+this.value*100;
+}
+
+var masterVolume = volumeSlider.value;
+
+// document.getElementById("workLengthInput").setAttribute("value", workLength);
+// document.getElementById("restLengthInput").setAttribute("value", restLength);
 
 drawFace();
 setInterval( refreshClock, 50);
@@ -54,24 +86,24 @@ function refreshClock(){
 
     if (working && workEndTime < baseTime && !alarm1) {
         alarm1 = soundAlarm1();
-        document.getElementById("led").innerHTML = "BREAK TIME&#10;PRESS 'START BREAKING'";
+        document.getElementById("lcd").innerHTML = "BREAK TIME&#10;PRESS 'START BREAKING'";
     } else
     if (working && workEndTime > baseTime){
         let timeDiff = (workEndTime-baseTime)/ 60 / 1000;
         let minutesLeft = Math.trunc(timeDiff);
         let secondsLeft = ("0"+(Math.trunc(timeDiff%1*60).toString())).slice(-2);
-        document.getElementById("led").innerHTML = "WORKING&#10;"+minutesLeft+":"+ secondsLeft;
+        document.getElementById("lcd").innerHTML = "WORKING&#10;"+minutesLeft+":"+ secondsLeft;
     }
 
     if (resting && restEndTime < baseTime && !alarm2) {
         alarm2 = soundAlarm2();
-        document.getElementById("led").innerHTML = "TIME TO WORK&#10;PRESS 'START WORKING'";
+        document.getElementById("lcd").innerHTML = "TIME TO WORK&#10;PRESS 'START WORKING'";
     } else
     if (resting && restEndTime > baseTime){
         let timeDiff = (restEndTime-baseTime)/ 60 / 1000;
         let minutesLeft = Math.trunc(timeDiff);
         let secondsLeft = ("0"+(Math.trunc(timeDiff%1*60).toString())).slice(-2);
-        document.getElementById("led").innerHTML = "TAKING A BREAK&#10;"+minutesLeft+":"+ secondsLeft;
+        document.getElementById("lcd").innerHTML = "TAKING A BREAK&#10;"+minutesLeft+":"+ secondsLeft;
     }
 
     if (working || resting){
@@ -79,7 +111,7 @@ function refreshClock(){
     }
 
     if (!working && !resting){
-        document.getElementById("led").innerHTML = "CLOCK MODE&#10;"+baseTime.toLocaleTimeString();
+        document.getElementById("lcd").innerHTML = "CLOCK MODE&#10;"+baseTime.toLocaleTimeString();
     }
 }
 
@@ -264,7 +296,7 @@ function workButtonClick(){
 
     calculateWorkRestRotations(new Date());
 
-    document.getElementById("led").innerHTML = "WORKING";
+    document.getElementById("lcd").innerHTML = "WORKING";
 
 }
 
@@ -282,7 +314,7 @@ function restButtonClick(){
 
     calculateRestWorkRotations(new Date());
 
-    document.getElementById("led").innerHTML = "TAKING A BREAK";
+    document.getElementById("lcd").innerHTML = "TAKING A BREAK";
 
 }
 
@@ -293,25 +325,25 @@ function clearButtonClick(){
     resting=false; 
     working=false;
 
-    document.getElementById("led").innerHTML = "CLOCK&#10;MODE";
+    document.getElementById("lcd").innerHTML = "CLOCK&#10;MODE";
 
 }
 
 function saveOptionsButtonClick(){
     soundClick();
+    document.getElementById('optionsModal').style.marginBottom='-215px';
 
-
-    document.getElementById('optionsModal').style.marginBottom='-210px';
-
-    let newWorkLength = document.getElementById("workLengthInput").value;
+    let newWorkLength = workLengthSlider.value;;
     if (newWorkLength != workLength ) {
         workLength = newWorkLength;
     }
 
-    let newRestLength = document.getElementById("restLengthInput").value;
+    let newRestLength = restLengthSlider.value;;
     if (newRestLength != restLength ) {
         restLength = newRestLength;
     }
+
+    masterVolume = volumeSlider.value;
 
     if (working){
         calculateWorkRestRotations(new Date(workStartTime));
@@ -322,10 +354,8 @@ function saveOptionsButtonClick(){
     }    
 }
 
-function workLengthChange(){
-
-}
-
-function restLengthChange(){
-
+function muteButtonClick(){
+    stopSounds();
+    masterVolume = 0;
+    volumeSlider.value = 0;
 }
