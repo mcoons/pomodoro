@@ -1,3 +1,8 @@
+@font-face {
+    font-family: "ds-digital";
+    src: url("../fonts/ds-digib.woff") format('woff');
+}
+
 #appcontainer{
     position: relative;
     background: url("../images/back1.jpeg");
@@ -24,6 +29,11 @@
     position: absolute;
     top: 50%; left: 50%;
     transform: translate(-50%,-50%);
+    font-family: "ds-digital";
+}
+
+.mydiv {
+    font-family: myfont
 }
 
 #hands {
@@ -45,10 +55,10 @@ form {
 }
 
 button {
-    margin: 10px;
+    margin: 10px 5px 0 5px;
     width: 120px;
     height: 40px;
-    box-shadow: 7px 7px 8px #ffffff inset, -5px -5px 6px #7796b3 inset;
+    box-shadow: 7px 7px 8px #ffffff inset, -5px -5px 6px #7796b3 inset, 2px 2px 5px rgb(70, 45, 0);
     border-radius: 10px;
     border-top: 2px solid rgb(172, 172, 172);
     border-bottom: 2px solid rgb(100, 100, 100);
@@ -76,9 +86,26 @@ margin-bottom: 0;
     background: url("../images/back1.jpeg");
     border: 1px solid black; 
     overflow:hidden;
-    /* padding: 15px; */
     transition: 1s;
     margin-bottom: -150px;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
+}
+
+#led {
+    color: black;
+    background-color: rgb(206, 206, 206);
+    font-family: "ds-digital";
+    font-size: 30px;
+    /* border: 2px solid black; */
+    margin-left: 20px;
+    margin-right: 20px;
+    text-align: center;
+    /* border-top: 5px solid rgb(255, 244, 150);
+    border-bottom: 5px solid #9C8355;
+    border-left: 5px solid #F8F2C0;
+    border-right: 5px solid #9C8355;  */
+    border: 5px solid black;
+    border-image: radial-gradient(#9C8355 10%, #F8F2C0) 20;
+    box-shadow: 2px 2px 5px rgb(70, 45, 0);
 }

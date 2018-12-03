@@ -52,15 +52,22 @@ function refreshClock(){
 
     drawHands(hrRotation, minRotation, secRotation);
 
-    if (working && workEndTime < baseTime && !alarm1) alarm1 = soundAlarm1();
-    if (resting && restEndTime < baseTime && !alarm2) alarm2 = soundAlarm2();
+    if (working && workEndTime < baseTime && !alarm1) {
+        alarm1 = soundAlarm1();
+        document.getElementById("led").innerText = "BREAK TIME";
+    }
+
+    if (resting && restEndTime < baseTime && !alarm2) {
+        alarm2 = soundAlarm2();
+        document.getElementById("led").innerText = "TIME TO WORK";
+    }
 
     if (working || resting)
         drawOverlays(workStartRotation, workEndRotation, restStartRotation, restEndRotation);
 }
 
 function drawFace(){
-    faceCtx.font = CLOCKWIDTH/10 + "px Serif";
+   faceCtx.font = CLOCKWIDTH/10 + "px Serif";
     
     // draw circle
     faceCtx.beginPath();
@@ -233,6 +240,9 @@ function workButtonClick(){
     resting=false; 
 
     calculateWorkRestRotations(new Date());
+
+    document.getElementById("led").innerText = "WORKING";
+
 }
 
 function restButtonClick(){
@@ -248,6 +258,9 @@ function restButtonClick(){
     working=false; 
 
     calculateRestWorkRotations(new Date());
+
+    document.getElementById("led").innerText = "TAKING A BREAK";
+
 }
 
 function clearButtonClick(){
@@ -256,6 +269,9 @@ function clearButtonClick(){
 
     resting=false; 
     working=false;
+
+    document.getElementById("led").innerText = "CLOCK MODE";
+
 }
 
 function saveOptionsButtonClick(){
