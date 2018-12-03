@@ -1,4 +1,4 @@
-let BOXWIDTH = 300;
+let BOXWIDTH = 270;
 let CLOCKWIDTH = BOXWIDTH-50;
 var centerX = centerY = CLOCKWIDTH/2;
 
@@ -106,15 +106,15 @@ function drawFace(){
 
     // Draw face text
     faceCtx.fillStyle = '#967A45';
-    faceCtx.fillText("XII",CLOCKWIDTH/2-18, 40);
-    faceCtx.fillText("III",CLOCKWIDTH-43, CLOCKWIDTH/2+8);
-    faceCtx.fillText("VI",CLOCKWIDTH/2-16, CLOCKWIDTH - 22);
-    faceCtx.fillText("IX",18, CLOCKWIDTH/2+8);
+    faceCtx.fillText("XII",CLOCKWIDTH/2-16, 30);
+    faceCtx.fillText("III",CLOCKWIDTH-35, CLOCKWIDTH/2+8);
+    faceCtx.fillText("VI",CLOCKWIDTH/2-14, CLOCKWIDTH - 13);
+    faceCtx.fillText("IX",13, CLOCKWIDTH/2+8);
 
     faceCtx.font = "12px Serif";
     faceCtx.fillText("Pomodoro",CLOCKWIDTH/2-26, CLOCKWIDTH/2+20);
     faceCtx.fillText("by",CLOCKWIDTH/2-5, CLOCKWIDTH/2+30);
-    faceCtx.fillText("Coons",CLOCKWIDTH/2-15, CLOCKWIDTH/2+40);
+    faceCtx.fillText("Coons",CLOCKWIDTH/2-14, CLOCKWIDTH/2+40);
 }
 
 function drawHands(hrRotation, minRotation, secRotation){
