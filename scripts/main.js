@@ -14,7 +14,7 @@ var workStartTime = workEndTime = restStartTime = restEndTime = null;
 
 var appcontainer = document.getElementById("appcontainer");
 appcontainer.style.width = BOXWIDTH+"px";
-appcontainer.style.height = BOXWIDTH+150+"px";
+appcontainer.style.height = BOXWIDTH+210+"px";
 
 var container = document.getElementById("clockcontainer");
 container.style.width = container.style.height = BOXWIDTH+"px";
@@ -54,16 +54,33 @@ function refreshClock(){
 
     if (working && workEndTime < baseTime && !alarm1) {
         alarm1 = soundAlarm1();
-        document.getElementById("led").innerText = "BREAK TIME";
+        document.getElementById("led").innerHTML = "BREAK TIME&#10;PRESS 'START BREAKING'";
+    } else
+    if (working && workEndTime > baseTime){
+        let timeDiff = (workEndTime-baseTime)/ 60 / 1000;
+        let minutesLeft = Math.trunc(timeDiff);
+        let secondsLeft = ("0"+(Math.trunc(timeDiff%1*60).toString())).slice(-2);
+        document.getElementById("led").innerHTML = "WORKING&#10;"+minutesLeft+":"+ secondsLeft;
     }
 
     if (resting && restEndTime < baseTime && !alarm2) {
         alarm2 = soundAlarm2();
-        document.getElementById("led").innerText = "TIME TO WORK";
+        document.getElementById("led").innerHTML = "TIME TO WORK&#10;PRESS 'START WORKING'";
+    } else
+    if (resting && restEndTime > baseTime){
+        let timeDiff = (restEndTime-baseTime)/ 60 / 1000;
+        let minutesLeft = Math.trunc(timeDiff);
+        let secondsLeft = ("0"+(Math.trunc(timeDiff%1*60).toString())).slice(-2);
+        document.getElementById("led").innerHTML = "TAKING A BREAK&#10;"+minutesLeft+":"+ secondsLeft;
     }
 
-    if (working || resting)
+    if (working || resting){
         drawOverlays(workStartRotation, workEndRotation, restStartRotation, restEndRotation);
+    }
+
+    if (!working && !resting){
+        document.getElementById("led").innerHTML = "CLOCK MODE&#10;"+baseTime.toLocaleTimeString();
+    }
 }
 
 function drawFace(){
@@ -162,8 +179,7 @@ function drawOverlays(workStartRotation, workEndRotation, restStartRotation, res
 function drawOverlay(ctx, start, end, color){
     ctx.beginPath();
     ctx.moveTo(CLOCKWIDTH/2, CLOCKWIDTH/2);
-    ctx.arc(CLOCKWIDTH/2, CLOCKWIDTH/2, CLOCKWIDTH/2, 
-        start, end, false);
+    ctx.arc(CLOCKWIDTH/2, CLOCKWIDTH/2, CLOCKWIDTH/2, start, end, false);
     ctx.closePath();
     ctx.fillStyle = color; 
     ctx.fill();
@@ -195,20 +211,20 @@ function calculateRestWorkRotations(starting){
     let baseTime = new Date(starting);
     let sec = baseTime.getSeconds();
 
-    console.log("baseTime: ", baseTime);
+    // console.log("baseTime: ", baseTime);
 
     restStartTime = new Date(baseTime.getTime());
     restEndTime = new Date(restStartTime.getTime());
-    console.log("first restEndTime: ",restEndTime);
+    // console.log("first restEndTime: ",restEndTime);
 
-    console.log("restEndTime minutes: ",restEndTime.getMinutes())
+    // console.log("restEndTime minutes: ",restEndTime.getMinutes())
     let newRestMinutes = restEndTime.getMinutes() + Number(restLength);
-    console.log("newRestMinutes: ", newRestMinutes);
+    // console.log("newRestMinutes: ", newRestMinutes);
 
     restEndTime.setMinutes(newRestMinutes);
 
-    console.log("restStartTime: ",restStartTime);
-    console.log("restEndTime: ",restEndTime);
+    // console.log("restStartTime: ",restStartTime);
+    // console.log("restEndTime: ",restEndTime);
 
     restStartRotation = ((restStartTime.getMinutes()*360/60)+(sec*(360/60)/60))*Math.PI/180 - Math.PI/2;
     restEndRotation = ((restEndTime.getMinutes()*360/60)+(sec*(360/60)/60))*Math.PI/180 - Math.PI/2;
@@ -222,16 +238,23 @@ function calculateRestWorkRotations(starting){
     workEndRotation = ((workEndTime.getMinutes()*360/60)+(sec*(360/60)/60))*Math.PI/180 - Math.PI/2;
 }
 
-function optionButtonClick(){
+function optionsButtonClick(){
     soundClick();
-    document.getElementById('optionsmodal').style.marginBottom='0'; 
+    document.getElementById('optionsModal').style.marginBottom='0'; 
 }
+
+function instructionsButtonClick(){
+    soundClick();
+    document.getElementById('instructionsModal').style.marginBottom='0'; 
+}
+
+
 
 function workButtonClick(){
 
-    console.log("-------------------------");
-    console.log("workLength: ", workLength);
-    console.log("restLength: ", restLength);
+    // console.log("-------------------------");
+    // console.log("workLength: ", workLength);
+    // console.log("restLength: ", restLength);
 
     soundClick();
     stopSounds();
@@ -241,15 +264,15 @@ function workButtonClick(){
 
     calculateWorkRestRotations(new Date());
 
-    document.getElementById("led").innerText = "WORKING";
+    document.getElementById("led").innerHTML = "WORKING";
 
 }
 
 function restButtonClick(){
 
-    console.log("-------------------------");
-    console.log("workLength: ", workLength);
-    console.log("restLength: ", restLength);
+    // console.log("-------------------------");
+    // console.log("workLength: ", workLength);
+    // console.log("restLength: ", restLength);
 
     soundClick();
     stopSounds();
@@ -259,7 +282,7 @@ function restButtonClick(){
 
     calculateRestWorkRotations(new Date());
 
-    document.getElementById("led").innerText = "TAKING A BREAK";
+    document.getElementById("led").innerHTML = "TAKING A BREAK";
 
 }
 
@@ -270,7 +293,7 @@ function clearButtonClick(){
     resting=false; 
     working=false;
 
-    document.getElementById("led").innerText = "CLOCK MODE";
+    document.getElementById("led").innerHTML = "CLOCK&#10;MODE";
 
 }
 
@@ -278,13 +301,12 @@ function saveOptionsButtonClick(){
     soundClick();
 
 
-    document.getElementById('optionsmodal').style.marginBottom='-150px';
+    document.getElementById('optionsModal').style.marginBottom='-210px';
 
     let newWorkLength = document.getElementById("workLengthInput").value;
     if (newWorkLength != workLength ) {
         workLength = newWorkLength;
     }
-
 
     let newRestLength = document.getElementById("restLengthInput").value;
     if (newRestLength != restLength ) {

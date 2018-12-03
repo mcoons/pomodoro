@@ -14,7 +14,7 @@
     border-bottom-right-radius: 10px;
     margin-left: auto;
     margin-right: auto;
-    padding:5px;
+    /* padding:4px; */
     overflow:hidden;
 
 }
@@ -55,7 +55,7 @@ form {
 }
 
 button {
-    margin: 10px 5px 0 5px;
+    margin: 8px 4px 0 4px;
     width: 120px;
     height: 40px;
     box-shadow: 7px 7px 8px #ffffff inset, -5px -5px 6px #7796b3 inset, 2px 2px 5px rgb(70, 45, 0);
@@ -73,39 +73,44 @@ margin-top: 15px;
 margin-bottom: 0;
 }
 
-#optionsmodal {
+#optionsModal, #instructionsModal {
     position: absolute;
     z-index: 20;
     bottom: 0px;
-    height: 150px;
-    width: 270px;
+    height: 200px;
+    width: 250px;
     left: 50%;
     transform: translate(-50%);
     color:white;
     font-weight: bold;
+    font-size: 15px;
     background: url("../images/back1.jpeg");
     border: 1px solid black; 
     overflow:hidden;
     transition: 1s;
-    margin-bottom: -150px;
+    margin-bottom: -210px;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
+    padding: 5px;
 }
+
+
 
 #led {
     color: black;
     background-color: rgb(206, 206, 206);
     font-family: "ds-digital";
-    font-size: 30px;
+    font-size: 20px;
     /* border: 2px solid black; */
-    margin-left: 20px;
-    margin-right: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
     text-align: center;
     /* border-top: 5px solid rgb(255, 244, 150);
     border-bottom: 5px solid #9C8355;
     border-left: 5px solid #F8F2C0;
     border-right: 5px solid #9C8355;  */
     border: 5px solid black;
-    border-image: radial-gradient(#9C8355 10%, #F8F2C0) 20;
-    box-shadow: 2px 2px 5px rgb(70, 45, 0);
+    border-image: radial-gradient(#9C8355 20%, #F8F2C0) 20;
+    box-shadow: 2px 2px 5px rgb(70, 45, 0), 1px 1px 1px black inset;
+    resize: none;
 }

@@ -19,16 +19,18 @@
                 
             </div>
 
-            <div id="led"> CLOCK MODE</div>
+            <textarea id="led" rows="2" cols="22">CLOCK MODE&#10;</textarea>
             
             <form>
                 <button onclick="workButtonClick(); return false;" >Start Working</button>
                 <button onclick="restButtonClick(); return false;">Start Breaking</button>
                 <button onclick="clearButtonClick(); return false;">Clear</button>
-                <button onclick="optionButtonClick(); return false;">Options</button>
+                <!-- <button onclick="clearButtonClick(); return false;">Silence Alarm</button> -->
+                <button onclick="optionsButtonClick(); return false;">Options</button>
+                <button onclick="instructionsButtonClick(); return false;">Instructions</button>
             </form>
             
-            <div id="optionsmodal">
+            <div id="optionsModal">
                 <input id="workLengthInput" type="number" min="15" max="30" step="5">
                 <label> - Work Length</label>
                 <br>
@@ -37,6 +39,13 @@
                 <br><br>
                 <button id="saveOptionsButton" onclick="saveOptionsButtonClick(); return false;">Finished</button>
             </div>
+            
+            <div id="instructionsModal" >
+                <div>Click 'Start Working' to begin.<br/><br/>When the break alarm sounds, press the 'Start Breaking' button to silence the alarm and schedule the next working period. When the break is over, press the 'Start Working' button to silence the alarm.</div>
+                <button id="saveOptionsButton" onclick="soundClick(); document.getElementById('instructionsModal').style.marginBottom='-210px'; return false;">Finished</button>
+            </div>
+
+
         </div>
     </main>
 </body>
