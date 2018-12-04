@@ -161,7 +161,7 @@ function drawHands(hrRotation, minRotation, secRotation) {
     handsCtx.fill();
     handsCtx.strokeStyle = '#000000';
     handsCtx.stroke();
-    
+
     drawHand(hrRotation, 6, -CLOCKWIDTH / 2 + CLOCKWIDTH / 6);
     drawHand(minRotation, 4, -CLOCKWIDTH / 2 + CLOCKWIDTH / 15);
 
@@ -303,4 +303,5 @@ function muteButtonClick() {
     stopSounds();
     masterVolume = 0;
     volumeSlider.value = 0;
+    volumeLabel.innerHTML = "Volume: " + volumeSlider.value;
 }
