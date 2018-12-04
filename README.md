@@ -7,7 +7,7 @@ It uses multiple overlaid canvas elements for the clock face, hands and colored 
 ![Pomodoro Thumbnail](/thumbnail.png)
 
 ## Deployed Link
-https://mcoons.github.io/pomodoro/
+http://pomodoro.michaelcoons.tech
 
 ## Instructions
  - Set the options for Work and Rest times
