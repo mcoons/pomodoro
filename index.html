@@ -20,6 +20,9 @@
             </div>
 
             <div id="clockshadow"></div>
+            
+            <div class="led-red"></div>
+            <div class="led-green"></div>
 
             <textarea id="lcd">CLOCK MODE&#10;</textarea>
             
@@ -33,12 +36,6 @@
             </form>
             
             <div id="optionsModal">
-                <!-- <input id="workLengthInput" type="number" min="15" max="30" step="5">
-                <label> - Work Length</label>
-                <br>
-                <input id="restLengthInput" type="number" min="5" max="15" step="5">
-                <label> - Rest Length</label>
-                <br><br> -->
 
                 <label id="workLengthLabel"></label>
                 <div class="slidecontainer">
@@ -52,11 +49,11 @@
 
                 <label id="volumeLabel"></label>
                 <div class="slidecontainer">
-                    <input id="volumeSlider" type="range" min="0" max="1" step=".01" value=".3" class="slider">
+                    <input id="volumeSlider" type="range" min="0" max="100" step="1" value="30" class="slider">
                 </div>
 
-
                 <button id="saveOptionsButton" onclick="saveOptionsButtonClick(); return false;">Finished</button>
+
             </div>
             
             <div id="instructionsModal" >

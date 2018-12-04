@@ -3,23 +3,23 @@
     src: url("../fonts/LCD.woff") format('woff');
 }
 
-#appcontainer{
+#appcontainer {
     position: relative;
     background: url("../images/back1.jpeg");
     background-size: contain;
-    border: 1px brown solid;
+    border: 8px rgba(130, 32, 32, 0.268) solid;
+    border-right: 8px rgba(130, 32, 32, 0.392) solid;
+    border-bottom: 8px rgba(130, 32, 32, 0.392) solid;
     border-top-left-radius: 180px;
     border-top-right-radius: 180px;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
     margin-left: auto;
     margin-right: auto;
-    /* padding:4px; */
     overflow:hidden;
-
 }
 
-#clockcontainer{
+#clockcontainer {
     position: relative;
     background: url("../images/ring.png");
     background-size: contain;
@@ -29,8 +29,6 @@
     position: absolute;
     top: 50%; left: 50%;
     transform: translate(-50%,-50%);
-    
-    /* font-family: "ds-digital"; */
 }
 
 #clockshadow{
@@ -45,7 +43,7 @@
     left: 50%;
     transform: translate(-50%,-50%);
 
-    box-shadow: 5px 5px 5px rgba(70, 46, 0, 0.653), 7px 7px 8px rgba(0, 0, 0, 0.315) inset;
+    box-shadow: 7px 7px 8px rgba(70, 46, 0, 0.653), 7px 7px 8px rgba(0, 0, 0, 0.315) inset;
     border-radius: 50%;
     border: 16px solid rgba(255, 0, 0, 0);
 }
@@ -65,7 +63,7 @@
     position: absolute;
     top: 50%; left: 50%;
     transform: translate(-50%,-50%);
-    z-index: 15;
+    z-index: 5;
 }
 
 form {
@@ -76,13 +74,13 @@ button {
     margin: 8px 4px 0 4px;
     width: 120px;
     height: 40px;
-    box-shadow: 7px 7px 8px #ffffff inset, -5px -5px 6px #7796b3 inset, 2px 2px 8px rgb(70, 45, 0);
+    box-shadow: 7px 7px 8px #fafafa inset, -5px -5px 6px #7796b3 inset, 2px 2px 8px rgb(70, 45, 0);
     border-radius: 10px;
     border-top: 2px solid rgb(172, 172, 172);
     border-bottom: 2px solid rgb(100, 100, 100);
     border-left: 2px solid rgb(172, 172, 172);
     border-right: 2px solid rgb(100, 100, 100);
-    background: linear-gradient(to bottom right, rgb(235, 244, 255), rgb(192, 220, 255));
+    background: linear-gradient(to bottom right, rgb(227, 240, 255), rgb(186, 217, 255));
 }
 
 #optionsModal, #instructionsModal {
@@ -106,7 +104,7 @@ button {
     padding: 5px;
 }
 
-#optionsModal{
+#optionsModal {
     text-align: center;
 }
 
@@ -122,7 +120,7 @@ button {
     text-align: center;
     border: 5px solid black;
     border-image: radial-gradient(#9C8355 20%, #F8F2C0) 20;
-    box-shadow: 3px 3px 5px rgb(70, 45, 0), 1px 1px 1px black inset;
+    box-shadow: 4px 4px 6px rgb(70, 45, 0), 2px 2px 5px black inset;
     resize: none;
 }
 
@@ -149,7 +147,7 @@ button {
     height: 15px; /* Slider handle height */
     background: #4CAF50; /* Green background */
     background: linear-gradient(to bottom right, rgb(235, 244, 255), rgb(192, 220, 255));
-    box-shadow: 7px 7px 8px #eeeeee inset, -5px -5px 6px #7796b3 inset, 2px 2px 5px rgb(70, 45, 0);
+    box-shadow: 7px 7px 8px #eeeeee inset, -5px -5px 6px #7796b3 inset, 3px 3px 5px rgb(70, 45, 0);
     border-radius: 10px;
 }
 
@@ -158,6 +156,64 @@ button {
     height: 35px; /* Slider handle height */
     background: #4CAF50; /* Green background */
     background: linear-gradient(to bottom right, rgb(235, 244, 255), rgb(192, 220, 255));
-    box-shadow: 7px 7px 8px #eeeeee inset, -5px -5px 6px #7796b3 inset, 2px 2px 5px rgb(70, 45, 0);
+    box-shadow: 7px 7px 8px #eeeeee inset, -5px -5px 6px #7796b3 inset, 3px 3px 5px rgb(70, 45, 0);
     border-radius: 10px;
 }
+
+.led-green {
+    position: absolute;
+    top: 49%; 
+    left: 5%;
+    transform: translate(5%,0%);
+    margin: 0 auto;
+    width: 24px;
+    height: 24px;
+    background-color: #ABFF00;
+    border-radius: 50%;
+    box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #304701 0 -1px 9px, #89FF00 0 2px 12px;
+  }
+
+.led-red {
+    position: absolute;
+    top: 49%; 
+    right: 5%;
+    transform: translate(5%,0%);
+    margin: 0 auto;
+    width: 24px;
+    height: 24px;
+    background-color: #A00;
+    border-radius: 50%;
+    box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(255, 0, 0, 0.5) 0 2px 12px;
+    /* -webkit-animation: blinkRed 0.5s infinite;
+    -moz-animation: blinkRed 0.5s infinite;
+    -ms-animation: blinkRed 0.5s infinite;
+    -o-animation: blinkRed 0.5s infinite;
+    animation: blinkRed 0.5s infinite; */
+  }
+  
+  @-webkit-keyframes blinkRed {
+      from { background-color: #F00; }
+      50% { background-color: #A00; box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(255, 0, 0, 0.5) 0 2px 0;}
+      to { background-color: #F00; }
+  }
+  @-moz-keyframes blinkRed {
+      from { background-color: #F00; }
+      50% { background-color: #A00; box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(255, 0, 0, 0.5) 0 2px 0;}
+      to { background-color: #F00; }
+  }
+  @-ms-keyframes blinkRed {
+      from { background-color: #F00; }
+      50% { background-color: #A00; box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(255, 0, 0, 0.5) 0 2px 0;}
+      to { background-color: #F00; }
+  }
+  @-o-keyframes blinkRed {
+      from { background-color: #F00; }
+      50% { background-color: #A00; box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(255, 0, 0, 0.5) 0 2px 0;}
+      to { background-color: #F00; }
+  }
+  @keyframes blinkRed {
+      from { background-color: #F00; }
+      50% { background-color: #A00; box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(255, 0, 0, 0.5) 0 2px 0;}
+      to { background-color: #F00; }
+  }
+  
