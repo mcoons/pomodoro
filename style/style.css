@@ -12,7 +12,7 @@ body {
     position: relative;
     background: url("../images/back1.jpeg");
     background-size: contain;
-    border: 8px rgba(130, 32, 32, 0.268) solid;
+    border: 8px rgba(140, 42, 42, 0.268) solid;
     border-right: 8px rgba(130, 32, 32, 0.392) solid;
     border-bottom: 8px rgba(130, 32, 32, 0.392) solid;
     border-top-left-radius: 180px;
@@ -104,8 +104,8 @@ form {
     overflow:hidden;
     transition: 1s;
     margin-bottom: -215px;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
     padding: 5px;
     text-align: center;
 }
@@ -157,7 +157,7 @@ a {
     height: 15px; /* Slider handle height */
     background: #4CAF50; /* Green background */
     background: linear-gradient(to bottom right, rgb(235, 244, 255), rgb(192, 220, 255));
-    box-shadow: 7px 7px 8px #eeeeee inset, -5px -5px 6px #7796b3 inset, 3px 3px 5px rgb(70, 45, 0);
+    box-shadow: 7px 7px 8px #eeeeee inset, -5px -5px 6px #7796b3 inset, 3px 3px 5px rgba(70, 46, 0, 0.653);
     border-radius: 10px;
 }
 
@@ -166,7 +166,7 @@ a {
     height: 35px; /* Slider handle height */
     background: #4CAF50; /* Green background */
     background: linear-gradient(to bottom right, rgb(235, 244, 255), rgb(192, 220, 255));
-    box-shadow: 7px 7px 8px #eeeeee inset, -5px -5px 6px #7796b3 inset, 3px 3px 5px rgb(70, 45, 0);
+    box-shadow: 7px 7px 8px #eeeeee inset, -5px -5px 6px #7796b3 inset, 3px 3px 5px rgba(70, 46, 0, 0.653);
     border-radius: 10px;
 }
 
@@ -180,7 +180,7 @@ a {
     height: 24px;
     background-color: #ABFF00;
     border-radius: 50%;
-    box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #304701 0 -1px 9px, #89FF00 0 2px 12px;
+    box-shadow: rgba(70, 46, 0, 0.653) 0 -1px 7px 1px, inset #304701 0 -1px 9px, #89FF00 0 2px 12px;
   }
 
 .led-red {
@@ -193,7 +193,7 @@ a {
     height: 24px;
     background-color: #A00;
     border-radius: 50%;
-    box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(255, 0, 0, 0.5) 0 2px 12px;
+    box-shadow: rgba(70, 46, 0, 0.653) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(255, 0, 0, 0.5) 0 2px 12px;
     /* -webkit-animation: blinkRed 0.5s infinite;
     -moz-animation: blinkRed 0.5s infinite;
     -ms-animation: blinkRed 0.5s infinite;
@@ -262,6 +262,7 @@ a {
     width: 62px;
     padding: 10px 0;
     transition: 0.3s;
+    font-weight: bold;
   }
   
   /* Change background color of buttons on hover */
