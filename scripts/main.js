@@ -10,6 +10,10 @@ var overlayAlpha = .3;
 var workColor = "rgba( 0, 250, 0, " + overlayAlpha + " )";
 var restColor = "rgba( 250, 0, 0, " + overlayAlpha + " )";
 
+var muted = false;
+var buttonClick = true;
+var logging = true;
+
 var workStartRotation = workEndRotation = restStartRotation = restEndRotation = null;
 var workStartTime = workEndTime = restStartTime = restEndTime = null;
 
@@ -35,6 +39,7 @@ var overlay = document.getElementById("overlay");
 var overlayCtx = overlay.getContext("2d");
 overlay.width = overlay.height = CLOCKWIDTH;
 
+
 drawFace(faceCtx);
 setInterval(refreshClock, 50);
 
@@ -53,25 +58,25 @@ function refreshClock() {
     drawHands(handsCtx, hrRotation, minRotation, secRotation);
 
     if (working && workEndTime < baseTime) {
-        if (!alarm1) alarm1 = soundAlarm1();
-        document.getElementById("lcd").innerHTML = "BREAK TIME" + (masterVolume === 0 ? " (MUTED)" : "") + "&#10;" + (baseTime.getSeconds() % 2 === 0 ? "PRESS 'START BREAKING'" : "");
+        if (!alarm1 && !muted) alarm1 = soundAlarm1();
+        document.getElementById("lcd").innerHTML = "BREAK TIME" + (muted ? " (MUTED)" : "") + "&#10;" + (baseTime.getSeconds() % 2 === 0 ? "PRESS 'START BREAKING'" : "");
     } else
         if (working && workEndTime > baseTime) {
             let timeDiff = (workEndTime - baseTime) / 60 / 1000;
             let minutesLeft = Math.trunc(timeDiff);
             let secondsLeft = ("0" + (Math.trunc(timeDiff % 1 * 60).toString())).slice(-2);
-            document.getElementById("lcd").innerHTML = "WORKING" + (masterVolume === 0 ? " (MUTED)" : "") + "&#10;" + minutesLeft + ":" + secondsLeft;
+            document.getElementById("lcd").innerHTML = "WORKING" + (muted ? " (MUTED)" : "") + "&#10;" + minutesLeft + ":" + secondsLeft;
         }
 
     if (resting && restEndTime < baseTime) {
-        if (!alarm2) alarm2 = soundAlarm2();
-        document.getElementById("lcd").innerHTML = "TIME TO WORK" + (masterVolume === 0 ? " (MUTED)" : "") + "&#10;" + (baseTime.getSeconds() % 2 === 0 ? "PRESS 'START WORKING'" : "");
+        if (!alarm2 && !muted) alarm2 = soundAlarm2();
+        document.getElementById("lcd").innerHTML = "TIME TO WORK" + (muted ? " (MUTED)" : "") + "&#10;" + (baseTime.getSeconds() % 2 === 0 ? "PRESS 'START WORKING'" : "");
     } else
         if (resting && restEndTime > baseTime) {
             let timeDiff = (restEndTime - baseTime) / 60 / 1000;
             let minutesLeft = Math.trunc(timeDiff);
             let secondsLeft = ("0" + (Math.trunc(timeDiff % 1 * 60).toString())).slice(-2);
-            document.getElementById("lcd").innerHTML = "TAKING A BREAK" + (masterVolume === 0 ? " (MUTED)" : "") + "&#10;" + minutesLeft + ":" + secondsLeft;
+            document.getElementById("lcd").innerHTML = "TAKING A BREAK" + (muted ? " (MUTED)" : "") + "&#10;" + minutesLeft + ":" + secondsLeft;
         }
 
     if (working || resting) drawOverlays(overlayCtx, workStartRotation, workEndRotation, restStartRotation, restEndRotation);

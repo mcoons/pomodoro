@@ -33,7 +33,7 @@
                 <button class="button" onclick="clearButtonClick(); return false;">Clear</button>
                 <button class="button" onclick="optionsButtonClick(); return false;">Options</button>
                 <button class="button" onclick="instructionsButtonClick(); return false;">Instructions</button>
-                <button class="button" onclick="muteButtonClick(); return false;">Mute Sounds</button>
+                <button id="mutebutton" class="button" onclick="muteButtonClick(); return false;">Mute Sounds</button>
             </form>
             
             <div id="optionsModal">
@@ -64,7 +64,9 @@
                     <div class="slidecontainer">
                         <input id="volumeSlider" type="range" min="0" max="100" step="1" value="10" class="slider">
                     </div>
-                    Change Mute Button to a Toggle<br>
+                    <div id="buttonClickCheckboxContainer">
+                        <input id="buttonClickCheckbox" type="checkbox" checked onchange="buttonCheckboxChange(); return false;">Button Clicks
+                    </div>
                     Select Different Alarm Sounds
                 </div>
                 
@@ -89,7 +91,7 @@
             <div id="instructionsModal" >
                 <a href="https://en.wikipedia.org/wiki/Pomodoro_Technique" target="blank">Pomodoro Technique</a>
                 <div>Click 'Start Working' to begin.<br/><br/>When the break alarm sounds, press the 'Start Breaking' button to silence the alarm and schedule the next working period. When the break is over, press the 'Start Working' button to silence the alarm.</div>
-                <button class="button" id="saveOptionsButton" onclick="soundClick(); document.getElementById('instructionsModal').style.marginBottom='-215px'; return false;">Finished</button>
+                <button class="button" id="finishedButton" onclick="if (!muted && buttonClick) soundClick(); document.getElementById('instructionsModal').style.marginBottom='-215px'; return false;">Finished</button>
             </div>
         </div>
     </main>

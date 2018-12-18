@@ -17,40 +17,45 @@ volumeLabel.innerHTML = "Volume: " + volumeSlider.value;
 volumeSlider.oninput = function () { volumeLabel.innerHTML = "Volume: " + this.value }
 
 var masterVolume = volumeSlider.value / 100;
+// var muted = false;
+// var buttonClick = true;
+// var logging = true;
 
 // Get the element with id="defaultOpen" and click on it
 document.getElementById("defaultOpen").click();
 
 function optionsButtonClick() {
-    soundClick();
+    if (!muted && buttonClick) soundClick();
     document.getElementById('optionsModal').style.marginBottom = '0';
 }
 
 function instructionsButtonClick() {
-    soundClick();
+    if (!muted && buttonClick) soundClick();
     document.getElementById('instructionsModal').style.marginBottom = '0';
 }
 
 function workButtonClick() {
-    soundClick();
+    if (!muted && buttonClick) soundClick();
     stopSounds();
     working = true;
     resting = false;
     calculateWorkRestRotations(new Date());
-    document.getElementById("lcd").innerHTML = "WORKING" + (masterVolume === 0 ? " (MUTED)" : "");
+    // document.getElementById("lcd").innerHTML = "WORKING" + (masterVolume === 0 ? " (MUTED)" : "");
+    document.getElementById("lcd").innerHTML = "WORKING" + (muted ? " (MUTED)" : "");
 }
 
 function restButtonClick() {
-    soundClick();
+    if (!muted && buttonClick) soundClick();
     stopSounds();
     resting = true;
     working = false;
     calculateRestWorkRotations(new Date());
-    document.getElementById("lcd").innerHTML = "TAKING A BREAK" + (masterVolume === 0 ? " (MUTED)" : "");
+    // document.getElementById("lcd").innerHTML = "TAKING A BREAK" + (masterVolume === 0 ? " (MUTED)" : "");
+    document.getElementById("lcd").innerHTML = "TAKING A BREAK" + (muted ? " (MUTED)" : "");
 }
 
 function clearButtonClick() {
-    soundClick();
+    if (!muted && buttonClick) soundClick();
     stopSounds();
     resting = false;
     working = false;
@@ -59,7 +64,7 @@ function clearButtonClick() {
 }
 
 function saveOptionsButtonClick() {
-    soundClick();
+    if (!muted && buttonClick) soundClick();
     document.getElementById('optionsModal').style.marginBottom = '-215px';
 
     workLength = workLengthSlider.value;
@@ -72,10 +77,11 @@ function saveOptionsButtonClick() {
 }
 
 function muteButtonClick() {
-    stopSounds();
-    masterVolume = 0;
-    volumeSlider.value = 0;
-    volumeLabel.innerHTML = "Volume: " + volumeSlider.value;
+    muted = !muted;
+    if (!muted && buttonClick) soundClick();
+    if (muted) stopSounds();
+    document.getElementById("mutebutton").innerText = muted ? "Unmute Sound" : "Mute Sound";
+    volumeLabel.innerHTML = "Volume: " + volumeSlider.value + (muted ? " (MUTED)" : "");
 }
 
 function openTab(evt, tabName) {
@@ -91,3 +97,14 @@ function openTab(evt, tabName) {
     document.getElementById(tabName).style.display = "block";
     evt.currentTarget.className += " active";
   }
+
+function buttonCheckboxChange(){
+    console.log("checkbox change ", document.getElementById("buttonClickCheckbox").checked);
+    buttonClick = document.getElementById("buttonClickCheckbox").checked;
+}
+// this.setAttribute("checked", "checked");
+// this.checked = buttonClick = true;
+
+// this.setAttribute("checked", ""); // For IE
+// this.removeAttribute("checked"); // For other browsers
+// this.checked = buttonClick = false;
