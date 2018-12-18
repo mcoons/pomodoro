@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Pomodoro Clock</title>
     <link rel="stylesheet" href="style/style.css" type="text/css" media="all">
+    <script src="scripts/storage.js" defer></script>
     <script src="scripts/main.js" defer></script>
     <script src="scripts/uicontrol.js" defer></script>
     <script src="scripts/howler.js" defer></script>
@@ -17,7 +18,6 @@
                 <canvas id="clockface"></canvas>
                 <canvas id="hands"></canvas>
                 <canvas id="overlay"></canvas>
-                
             </div>
 
             <div id="clockshadow"></div>
@@ -27,14 +27,16 @@
 
             <textarea id="lcd">CLOCK MODE</textarea>
             
-            <form>
+            <!-- <form> -->
+            <div class="buttoncontainer">
                 <button class="button" onclick="workButtonClick(); return false;" >Start Working</button>
                 <button class="button" onclick="restButtonClick(); return false;">Start Breaking</button>
                 <button class="button" onclick="clearButtonClick(); return false;">Clear</button>
                 <button class="button" onclick="optionsButtonClick(); return false;">Options</button>
                 <button class="button" onclick="instructionsButtonClick(); return false;">Instructions</button>
                 <button id="mutebutton" class="button" onclick="muteButtonClick(); return false;">Mute Sounds</button>
-            </form>
+            </div>
+            <!-- </form> -->
             
             <div id="optionsModal">
 
@@ -46,20 +48,18 @@
                 </div>
                           
                 <div id="Time" class="tabcontent">
-
                     <label id="workLengthLabel"></label>
                     <div class="slidecontainer">
-                        <input id="workLengthSlider" type="range" min="15" max="45" step="5" value="25" class="slider">
+                        <input id="workLengthSlider" type="range" min="15" max="45" step="5" class="slider">
                     </div>
 
                     <label id="restLengthLabel"></label>
                     <div class="slidecontainer">
-                        <input id="restLengthSlider" type="range" min="1" max="15" step="1" value="5" class="slider">
+                        <input id="restLengthSlider" type="range" min="1" max="15" step="1" class="slider">
                     </div>
                 </div>
 
                 <div id="Sound" class="tabcontent">
-
                     <label id="volumeLabel"></label>
                     <div class="slidecontainer">
                         <input id="volumeSlider" type="range" min="0" max="100" step="1" value="10" class="slider">
@@ -67,22 +67,23 @@
                     <div id="buttonClickCheckboxContainer">
                         <input id="buttonClickCheckbox" type="checkbox" checked onchange="buttonCheckboxChange(); return false;">Button Clicks
                     </div>
-                    Select Different Alarm Sounds
+                    <br>
+                    (Select Different Alarm Sounds)
                 </div>
                 
                 <div id="Visual" class="tabcontent">      
                     Visual Options<br><br>
-                    Enable LEDs<br>
-                    Change Wood Color<br>
-                    Change Overlay Colors
+                    (Enable LEDs)<br>
+                    (Change Wood Color)<br>
+                    (Change Overlay Colors)
                 </div>
 
                 <div id="Logging" class="tabcontent">      
                     Logging Options<br><br>
-                    Enable/Clear Logging<br>
-                    View Log in New Tab<br>
-                    Download Log<br>
-                    Save Everything to Local Storage  
+                    (Enable/Clear Logging)<br>
+                    (View Log in New Tab)<br>
+                    (Download Log)<br>
+                    (Save Everything to Local Storage)  
                 </div>
                         
                 <button class="button" id="saveOptionsButton" onclick="saveOptionsButtonClick(); return false;">Finished</button>

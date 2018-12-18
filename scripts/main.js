@@ -2,8 +2,8 @@ let BOXWIDTH = 270;
 let CLOCKWIDTH = BOXWIDTH - 50;
 var CENTERX = CENTERY = CLOCKWIDTH / 2;
 
-var workLength = 25;  // minutes
-var restLength = 5;   // minutes
+var workLength = 15;  // minutes
+var restLength = 1;   // minutes
 var working = resting = false;
 
 var overlayAlpha = .3;
@@ -13,6 +13,14 @@ var restColor = "rgba( 250, 0, 0, " + overlayAlpha + " )";
 var muted = false;
 var buttonClick = true;
 var logging = true;
+
+var masterVolume = .5;
+
+loadOptions();
+
+document.getElementById("buttonClickCheckbox").checked = buttonClick;
+document.getElementById("mutebutton").innerText = muted ? "Unmute Sounds" : "Mute Sounds";
+document.getElementById("volumeSlider").setAttribute("value", masterVolume*100);
 
 var workStartRotation = workEndRotation = restStartRotation = restEndRotation = null;
 var workStartTime = workEndTime = restStartTime = restEndTime = null;

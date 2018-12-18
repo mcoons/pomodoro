@@ -1,10 +1,12 @@
 var workLengthSlider = document.getElementById("workLengthSlider");
+workLengthSlider.setAttribute("value", workLength);
 var workLengthLabel = document.getElementById("workLengthLabel");
 workLengthLabel.innerHTML = "Work Length: " + workLengthSlider.value;
 
 workLengthSlider.oninput = function () { workLengthLabel.innerHTML = "Work Length: " + this.value }
 
 var restLengthSlider = document.getElementById("restLengthSlider");
+restLengthSlider.setAttribute("value", restLength);
 var restLengthLabel = document.getElementById("restLengthLabel");
 restLengthLabel.innerHTML = "Break Length: " + restLengthSlider.value;
 
@@ -16,10 +18,7 @@ volumeLabel.innerHTML = "Volume: " + volumeSlider.value;
 
 volumeSlider.oninput = function () { volumeLabel.innerHTML = "Volume: " + this.value }
 
-var masterVolume = volumeSlider.value / 100;
-// var muted = false;
-// var buttonClick = true;
-// var logging = true;
+masterVolume = volumeSlider.value / 100;
 
 // Get the element with id="defaultOpen" and click on it
 document.getElementById("defaultOpen").click();
@@ -40,7 +39,6 @@ function workButtonClick() {
     working = true;
     resting = false;
     calculateWorkRestRotations(new Date());
-    // document.getElementById("lcd").innerHTML = "WORKING" + (masterVolume === 0 ? " (MUTED)" : "");
     document.getElementById("lcd").innerHTML = "WORKING" + (muted ? " (MUTED)" : "");
 }
 
@@ -50,7 +48,6 @@ function restButtonClick() {
     resting = true;
     working = false;
     calculateRestWorkRotations(new Date());
-    // document.getElementById("lcd").innerHTML = "TAKING A BREAK" + (masterVolume === 0 ? " (MUTED)" : "");
     document.getElementById("lcd").innerHTML = "TAKING A BREAK" + (muted ? " (MUTED)" : "");
 }
 
@@ -71,6 +68,8 @@ function saveOptionsButtonClick() {
     restLength = restLengthSlider.value;
     masterVolume = volumeSlider.value / 100;
 
+    saveOptions();
+
     if (working) calculateWorkRestRotations(new Date(workStartTime));
     else
     if (resting) calculateRestWorkRotations(new Date(restStartTime));
@@ -80,8 +79,9 @@ function muteButtonClick() {
     muted = !muted;
     if (!muted && buttonClick) soundClick();
     if (muted) stopSounds();
-    document.getElementById("mutebutton").innerText = muted ? "Unmute Sound" : "Mute Sound";
+    document.getElementById("mutebutton").innerText = muted ? "Unmute Sounds" : "Mute Sounds";
     volumeLabel.innerHTML = "Volume: " + volumeSlider.value + (muted ? " (MUTED)" : "");
+    saveOptions();
 }
 
 function openTab(evt, tabName) {
@@ -99,9 +99,9 @@ function openTab(evt, tabName) {
   }
 
 function buttonCheckboxChange(){
-    console.log("checkbox change ", document.getElementById("buttonClickCheckbox").checked);
     buttonClick = document.getElementById("buttonClickCheckbox").checked;
 }
+
 // this.setAttribute("checked", "checked");
 // this.checked = buttonClick = true;
 
