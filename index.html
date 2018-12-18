@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Pomodoro Clock</title>
     <link rel="stylesheet" href="style/style.css" type="text/css" media="all">
+    <script src="scripts/storage.js" defer></script>
     <script src="scripts/main.js" defer></script>
     <script src="scripts/uicontrol.js" defer></script>
     <script src="scripts/howler.js" defer></script>
@@ -17,7 +18,6 @@
                 <canvas id="clockface"></canvas>
                 <canvas id="hands"></canvas>
                 <canvas id="overlay"></canvas>
-                
             </div>
 
             <div id="clockshadow"></div>
@@ -27,38 +27,72 @@
 
             <textarea id="lcd">CLOCK MODE</textarea>
             
-            <form>
-                <button onclick="workButtonClick(); return false;" >Start Working</button>
-                <button onclick="restButtonClick(); return false;">Start Breaking</button>
-                <button onclick="clearButtonClick(); return false;">Clear</button>
-                <button onclick="optionsButtonClick(); return false;">Options</button>
-                <button onclick="instructionsButtonClick(); return false;">Instructions</button>
-                <button onclick="muteButtonClick(); return false;">Mute Sounds</button>
-            </form>
+            <!-- <form> -->
+            <div class="buttoncontainer">
+                <button class="button" onclick="workButtonClick(); return false;" >Start Working</button>
+                <button class="button" onclick="restButtonClick(); return false;">Start Breaking</button>
+                <button class="button" onclick="clearButtonClick(); return false;">Clear</button>
+                <button class="button" onclick="optionsButtonClick(); return false;">Options</button>
+                <button class="button" onclick="instructionsButtonClick(); return false;">Instructions</button>
+                <button id="mutebutton" class="button" onclick="muteButtonClick(); return false;">Mute Sounds</button>
+            </div>
+            <!-- </form> -->
             
             <div id="optionsModal">
-                <label id="workLengthLabel"></label>
-                <div class="slidecontainer">
-                    <input id="workLengthSlider" type="range" min="15" max="45" step="5" value="25" class="slider">
+
+                <div class="tab">
+                    <button class="tablinks" onclick="openTab(event, 'Time')" id="defaultOpen">Time</button>
+                    <button class="tablinks" onclick="openTab(event, 'Sound')">Sound</button>
+                    <button class="tablinks" onclick="openTab(event, 'Visual')">Visual</button>
+                    <button class="tablinks" onclick="openTab(event, 'Logging')">Logging</button>
+                </div>
+                          
+                <div id="Time" class="tabcontent">
+                    <label id="workLengthLabel"></label>
+                    <div class="slidecontainer">
+                        <input id="workLengthSlider" type="range" min="15" max="45" step="5" class="slider">
+                    </div>
+
+                    <label id="restLengthLabel"></label>
+                    <div class="slidecontainer">
+                        <input id="restLengthSlider" type="range" min="1" max="15" step="1" class="slider">
+                    </div>
                 </div>
 
-                <label id="restLengthLabel"></label>
-                <div class="slidecontainer">
-                    <input id="restLengthSlider" type="range" min="1" max="15" step="1" value="5" class="slider">
+                <div id="Sound" class="tabcontent">
+                    <label id="volumeLabel"></label>
+                    <div class="slidecontainer">
+                        <input id="volumeSlider" type="range" min="0" max="100" step="1" value="10" class="slider">
+                    </div>
+                    <div id="buttonClickCheckboxContainer">
+                        <input id="buttonClickCheckbox" type="checkbox" checked onchange="buttonCheckboxChange(); return false;">Button Clicks
+                    </div>
+                    <br>
+                    (Select Different Alarm Sounds)
+                </div>
+                
+                <div id="Visual" class="tabcontent">      
+                    Visual Options<br><br>
+                    (Enable LEDs)<br>
+                    (Change Wood Color)<br>
+                    (Change Overlay Colors)
                 </div>
 
-                <label id="volumeLabel"></label>
-                <div class="slidecontainer">
-                    <input id="volumeSlider" type="range" min="0" max="100" step="1" value="10" class="slider">
+                <div id="Logging" class="tabcontent">      
+                    Logging Options<br><br>
+                    (Enable/Clear Logging)<br>
+                    (View Log in New Tab)<br>
+                    (Download Log)<br>
+                    (Save Everything to Local Storage)  
                 </div>
-
-                <button id="saveOptionsButton" onclick="saveOptionsButtonClick(); return false;">Finished</button>
+                        
+                <button class="button" id="saveOptionsButton" onclick="saveOptionsButtonClick(); return false;">Finished</button>
             </div>
             
             <div id="instructionsModal" >
                 <a href="https://en.wikipedia.org/wiki/Pomodoro_Technique" target="blank">Pomodoro Technique</a>
                 <div>Click 'Start Working' to begin.<br/><br/>When the break alarm sounds, press the 'Start Breaking' button to silence the alarm and schedule the next working period. When the break is over, press the 'Start Working' button to silence the alarm.</div>
-                <button id="saveOptionsButton" onclick="soundClick(); document.getElementById('instructionsModal').style.marginBottom='-215px'; return false;">Finished</button>
+                <button class="button" id="finishedButton" onclick="if (!muted && buttonClick) soundClick(); document.getElementById('instructionsModal').style.marginBottom='-215px'; return false;">Finished</button>
             </div>
         </div>
     </main>
