@@ -1,7 +1,5 @@
 class Face {
-    // constructor(context, centerX, centerY, width) {
     constructor(centerX, centerY, width) {
-        // this.context = context;
         this.context = document.querySelector("#clockface").getContext("2d");
         this.centerX = centerX;
         this.centerY = centerY;
@@ -63,11 +61,9 @@ class Face {
 }
 
 class Overlay {
-    // constructor (context, color, clockWidth){
-    constructor (color, clockWidth){
-        // this.context = context;
+    constructor (clockWidth){
         this.context = document.querySelector("#overlay").getContext("2d");
-        this.color = color;
+        this.color = "black";
         this.clockWidth = clockWidth;
         document.querySelector("#overlay").width = this.clockWidth;
         document.querySelector("#overlay").height = this.clockWidth;
@@ -77,20 +73,22 @@ class Overlay {
         this.context.clearRect(0, 0, this.clockWidth, this.clockWidth);
     }
 
+    setColor(color){
+        this.color = color;
+    }
+
     draw(start, end){
+        this.context.fillStyle = this.color;
         this.context.beginPath();
         this.context.moveTo(this.clockWidth / 2, this.clockWidth / 2);
         this.context.arc(this.clockWidth / 2, this.clockWidth / 2, this.clockWidth / 2, start, end, false);
         this.context.closePath();
-        this.context.fillStyle = this.color;
         this.context.fill();
     }
 }
 
 class Hand{
-    // constructor(context, color, width, length, centerX, centerY, clockWidth){
     constructor(color, width, length, centerX, centerY, clockWidth){
-        // this.context = context;
         this.context = document.querySelector("#hands").getContext("2d");
         this.color = color;
         this.width = width;
@@ -107,14 +105,22 @@ class Hand{
     }
 
     draw(rotation){
-        this.context.resetTransform();
-        this.context.translate(this.centerX, this.centerY);
-        this.context.rotate(rotation);
-        this.context.translate(-this.centerX, -this.centerY);
         this.context.shadowBlur = 2;
         this.context.shadowColor = "rgba(0,0,0,.3)";
         this.context.shadowOffsetX = 3;
         this.context.shadowOffsetY = 3;
+
+        this.context.fillStyle = this.color;
+
+        // MINUTE HAND AXIS CIRCLE
+        this.context.resetTransform();
+        this.context.beginPath();
+        this.context.arc(this.centerX, this.centerY, this.width*1.25, 0, 2 * Math.PI, false);
+        this.context.fill();
+
+        this.context.translate(this.centerX, this.centerY);
+        this.context.rotate(rotation);
+        this.context.translate(-this.centerX, -this.centerY);
         this.context.fillRect(this.centerX - this.width / 2, this.centerY, this.width, this.length);
     }
 }
