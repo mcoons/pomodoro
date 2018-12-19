@@ -27,3 +27,4 @@ function saveOptions(){
     localStorage.setItem("muted", muted);
     localStorage.setItem("volume", masterVolume);
 }
+

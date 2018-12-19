@@ -14,7 +14,8 @@ restLengthSlider.oninput = function () { restLengthLabel.innerHTML = "Break Leng
 
 var volumeSlider = document.getElementById("volumeSlider");
 var volumeLabel = document.getElementById("volumeLabel");
-volumeLabel.innerHTML = "Volume: " + volumeSlider.value;
+volumeLabel.innerHTML = "Volume: " + volumeSlider.value + (muted ? " (MUTED)" : "");
+
 
 volumeSlider.oninput = function () { volumeLabel.innerHTML = "Volume: " + this.value }
 
@@ -36,6 +37,8 @@ function instructionsButtonClick() {
 function workButtonClick() {
     if (!muted && buttonClick) soundClick();
     stopSounds();
+    document.getElementById("led-red").classList.remove("led-red-blink");
+    document.getElementById("led-green").classList.remove("led-green-blink");
     working = true;
     resting = false;
     calculateWorkRestRotations(new Date());
@@ -45,6 +48,8 @@ function workButtonClick() {
 function restButtonClick() {
     if (!muted && buttonClick) soundClick();
     stopSounds();
+    document.getElementById("led-red").classList.remove("led-red-blink");
+    document.getElementById("led-green").classList.remove("led-green-blink");
     resting = true;
     working = false;
     calculateRestWorkRotations(new Date());
@@ -54,10 +59,13 @@ function restButtonClick() {
 function clearButtonClick() {
     if (!muted && buttonClick) soundClick();
     stopSounds();
+    document.getElementById("led-red").classList.remove("led-red-blink");
+    document.getElementById("led-green").classList.remove("led-green-blink");
     resting = false;
     working = false;
     document.getElementById("lcd").innerHTML = "CLOCK MODE";
-    overlayCtx.clearRect(0, 0, CLOCKWIDTH, CLOCKWIDTH);
+    // overlayCtx.clearRect(0, 0, CLOCKWIDTH, CLOCKWIDTH);
+    workOverlay.clear();
 }
 
 function saveOptionsButtonClick() {

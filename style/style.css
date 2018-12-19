@@ -22,6 +22,7 @@ body {
     margin-left: auto;
     margin-right: auto;
     overflow:hidden;
+    box-shadow: 4px 4px 8px 1px rgba(70, 70, 70, 0.453);
 }
 
 #clockcontainer {
@@ -170,6 +171,9 @@ body {
     border-radius: 10px;
 }
 
+
+
+
 .led-green {
     position: absolute;
     top: 49%; 
@@ -178,30 +182,44 @@ body {
     margin: 0 auto;
     width: 24px;
     height: 24px;
-    background-color: #ABFF00;
+    background-color: rgb(2, 111, 9);
     border-radius: 50%;
-    box-shadow: rgba(70, 46, 0, 0.653) 0 -1px 7px 1px, inset #304701 0 -1px 9px, #89FF00 0 2px 12px;
+    border: 2px solid rgb(206, 196, 108);
+    /* border-image: radial-gradient(#9C8355 20%, #F8F2C0) 20; */
+    box-shadow: rgba(70, 46, 0, 0.353) 0 0 7px 3px, inset #213200 0 0 3px 3px, inset 3px 3px 2px 2px lightgreen, 4px 4px 6px rgba(70, 46, 0, 0.653);
+  }
+
+  .led-green-blink {
+    /* -webkit-animation: blinkGreen 0.5s infinite;
+    -moz-animation: blinkGreen 2.0s infinite;
+    -ms-animation: blinkGreen 2.0s infinite;
+    -o-animation: blinkGreen 2.0s infinite; */
+    animation: blinkGreen 2.0s infinite; 
   }
 
 .led-red {
     position: absolute;
     top: 49%; 
-    right: 5%;
+    right: 6%;
     transform: translate(5%,0%);
     margin: 0 auto;
     width: 24px;
     height: 24px;
     background-color: #A00;
     border-radius: 50%;
-    box-shadow: rgba(70, 46, 0, 0.653) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(255, 0, 0, 0.5) 0 2px 12px;
+    border: 2px solid rgb(206, 196, 108);
+    box-shadow: rgba(70, 46, 0, 0.353) 0 0 7px 3px, inset #601414 0 0 3px 3px, inset 3px 3px 2px 2px lightcoral, 4px 4px 6px rgba(70, 46, 0, 0.653);
+  }
+
+  .led-red-blink {
     /* -webkit-animation: blinkRed 0.5s infinite;
-    -moz-animation: blinkRed 0.5s infinite;
-    -ms-animation: blinkRed 0.5s infinite;
-    -o-animation: blinkRed 0.5s infinite;
-    animation: blinkRed 0.5s infinite; */
+    -moz-animation: blinkRed 2.0s infinite;
+    -ms-animation: blinkRed 2.0s infinite;
+    -o-animation: blinkRed 2.0s infinite; */
+    animation: blinkRed 2.0s infinite; 
   }
   
-  @-webkit-keyframes blinkRed {
+  /* @-webkit-keyframes blinkRed {
       from { background-color: #F00; }
       50% { background-color: #A00; box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(255, 0, 0, 0.5) 0 2px 0;}
       to { background-color: #F00; }
@@ -220,13 +238,21 @@ body {
       from { background-color: #F00; }
       50% { background-color: #A00; box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(255, 0, 0, 0.5) 0 2px 0;}
       to { background-color: #F00; }
-  }
+  } */
+
+
   @keyframes blinkRed {
-      from { background-color: #F00; }
-      50% { background-color: #A00; box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(255, 0, 0, 0.5) 0 2px 0;}
-      to { background-color: #F00; }
+      from { background-color: rgb(255, 0, 0); box-shadow: 0 0 15px 8px rgba(247, 6, 6, 0.706), inset #441313 0 -1px 9px}
+      50% { background-color: #800; box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(255, 0, 0, 0.5) 0 2px 0;}
+      to { background-color: rgb(255, 0, 0); box-shadow: 0 0 15px 8px rgba(247, 6, 6, 0.706), inset #441313 0 -1px 9px}
   }
   
+  @keyframes blinkGreen {
+    from { background-color: rgb(1, 249, 1); box-shadow: 0 0 15px 8px rgba(6, 247, 34, 0.506), inset #441313 0 -1px 9px}
+    50% { background-color: rgb(0, 109, 22); box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(255, 0, 0, 0.5) 0 2px 0;}
+    to { background-color: rgb(1, 249, 1); box-shadow: 0 0 15px 8px rgb(6, 247, 34, 0.506), inset #441313 0 -1px 9px}
+}
+
 
 
 
