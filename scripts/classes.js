@@ -8,7 +8,7 @@ class Face {
         document.querySelector("#clockface").height = this.width;
     }
 
-    draw(){
+    draw() {
         this.context.font = this.width / 10 + "px Serif";
 
         // draw circle
@@ -17,14 +17,14 @@ class Face {
         this.context.fillStyle = 'white';
         this.context.fill();
         this.context.lineWidth = 2;
-        this.context.strokeStyle = '#000000';
-        this.context.stroke();       
-    
+        this.context.strokeStyle = 'black';
+        this.context.stroke();
+
         for (let degrees = 0; degrees < 360; degrees += 6) {
             let rad = degrees * Math.PI / 180;
             let tickLength = this.width / 70;
             this.context.lineWidth = 1;
-    
+
             if (degrees % 90 === 0) {
                 tickLength = this.width / 20;
                 this.context.lineWidth = this.width / 60;
@@ -34,17 +34,17 @@ class Face {
                     tickLength = this.width / 40;
                     this.context.lineWidth = this.width / 120;
                 }
-    
+
             let x1 = Math.cos(rad) * this.width / 2 + this.centerX;
             let y1 = Math.sin(rad) * this.width / 2 + this.centerY;
             let x2 = Math.cos(rad) * (this.width / 2 - tickLength) + this.centerX;
             let y2 = Math.sin(rad) * (this.width / 2 - tickLength) + this.centerY;
-    
+
             this.context.beginPath();
             this.context.moveTo(x1, y1);
             this.context.lineTo(x2, y2);
             this.context.stroke();
-        }    
+        }
 
         // Draw face text
         this.context.fillStyle = '#967A45';
@@ -61,7 +61,7 @@ class Face {
 }
 
 class Overlay {
-    constructor (clockWidth){
+    constructor(clockWidth) {
         this.context = document.querySelector("#overlay").getContext("2d");
         this.color = "black";
         this.clockWidth = clockWidth;
@@ -69,15 +69,15 @@ class Overlay {
         document.querySelector("#overlay").height = this.clockWidth;
     }
 
-    clear(){
+    clear() {
         this.context.clearRect(0, 0, this.clockWidth, this.clockWidth);
     }
 
-    setColor(color){
+    setColor(color) {
         this.color = color;
     }
 
-    draw(start, end){
+    draw(start, end) {
         this.context.fillStyle = this.color;
         this.context.beginPath();
         this.context.moveTo(this.clockWidth / 2, this.clockWidth / 2);
@@ -87,8 +87,8 @@ class Overlay {
     }
 }
 
-class Hand{
-    constructor(color, width, length, centerX, centerY, clockWidth){
+class Hand {
+    constructor(color, width, length, centerX, centerY, clockWidth) {
         this.context = document.querySelector("#hands").getContext("2d");
         this.color = color;
         this.width = width;
@@ -100,11 +100,11 @@ class Hand{
         document.querySelector("#hands").height = this.clockWidth;
     }
 
-    clear(){
+    clear() {
         this.context.clearRect(0, 0, this.clockWidth, this.clockWidth);
     }
 
-    draw(rotation){
+    draw(rotation) {
         this.context.shadowBlur = 2;
         this.context.shadowColor = "rgba(0,0,0,.3)";
         this.context.shadowOffsetX = 3;
@@ -115,7 +115,7 @@ class Hand{
         // MINUTE HAND AXIS CIRCLE
         this.context.resetTransform();
         this.context.beginPath();
-        this.context.arc(this.centerX, this.centerY, this.width*1.25, 0, 2 * Math.PI, false);
+        this.context.arc(this.centerX, this.centerY, this.width * 1.25, 0, 2 * Math.PI, false);
         this.context.fill();
 
         this.context.translate(this.centerX, this.centerY);
