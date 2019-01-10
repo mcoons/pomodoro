@@ -2,9 +2,9 @@ const BOXWIDTH = 270;
 const CLOCKWIDTH = BOXWIDTH - 50;
 const CENTERX = CENTERY = CLOCKWIDTH / 2;
 
-var appcontainer = document.querySelector("#appcontainer");
-appcontainer.style.width = BOXWIDTH + "px";
-appcontainer.style.height = BOXWIDTH + 210 + "px";
+var appContainer = document.querySelector("#appcontainer");
+appContainer.style.width = BOXWIDTH + "px";
+appContainer.style.height = BOXWIDTH + 210 + "px";
 
 var container = document.querySelector("#clockcontainer");
 container.style.width = container.style.height = BOXWIDTH + "px";
@@ -23,6 +23,7 @@ var workColor = "rgba( 0, 250, 0, " + overlayAlpha + " )";
 var restColor = "rgba( 250, 0, 0, " + overlayAlpha + " )";
 
 // Set option defaults prior to attempting to load options from local storage
+var mode = "pomodoro";
 var muted = false;
 var buttonClick = true;
 var workLength = 15;  // minutes
@@ -33,9 +34,9 @@ loadOptions();  // from local storage ... defined in storage.js
 
 let log = new Log();
 let face = new Face(CENTERX, CENTERY, CLOCKWIDTH);
-let hourHand = new Hand('black', 6, -CLOCKWIDTH / 2 + CLOCKWIDTH / 6, CENTERX, CENTERY, CLOCKWIDTH);
-let minuteHand = new Hand('black', 4, -CLOCKWIDTH / 2 + CLOCKWIDTH / 15, CENTERX, CENTERY, CLOCKWIDTH);
-let secondHand = new Hand('red', 2, -CLOCKWIDTH / 2 + CLOCKWIDTH / 30, CENTERX, CENTERY, CLOCKWIDTH);
+let hourHand = new Hand("black", 6, -CLOCKWIDTH / 2 + CLOCKWIDTH / 6, CENTERX, CENTERY, CLOCKWIDTH);
+let minuteHand = new Hand("black", 4, -CLOCKWIDTH / 2 + CLOCKWIDTH / 15, CENTERX, CENTERY, CLOCKWIDTH);
+let secondHand = new Hand("red", 2, -CLOCKWIDTH / 2 + CLOCKWIDTH / 30, CENTERX, CENTERY, CLOCKWIDTH);
 
 log.load();
 
@@ -101,6 +102,7 @@ function refreshClock() {
     if (working || resting) {
         drawOverlays(workStartRotation, workEndRotation, restStartRotation, restEndRotation);
     }
+
     if (!working && !resting) {
         document.querySelector("#lcd").innerHTML = "CLOCK MODE&#10;" + baseTime.toLocaleTimeString();
     }

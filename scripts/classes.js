@@ -20,6 +20,7 @@ class Face {
         this.context.strokeStyle = 'black';
         this.context.stroke();
 
+        // draw ticks
         for (let degrees = 0; degrees < 360; degrees += 6) {
             let rad = degrees * Math.PI / 180;
             let tickLength = this.width / 70;
@@ -77,7 +78,9 @@ class Overlay {
         this.color = color;
     }
 
+    // draw a piece of pie
     draw(start, end) {
+        if (start === end) end += Math.PI*2;
         this.context.fillStyle = this.color;
         this.context.beginPath();
         this.context.moveTo(this.clockWidth / 2, this.clockWidth / 2);
@@ -100,6 +103,7 @@ class Hand {
         document.querySelector("#hands").height = this.clockWidth;
     }
 
+    // clears the whole hand canvas.  only needs called for first hand at start
     clear() {
         this.context.clearRect(0, 0, this.clockWidth, this.clockWidth);
     }
@@ -118,9 +122,41 @@ class Hand {
         this.context.arc(this.centerX, this.centerY, this.width * 1.25, 0, 2 * Math.PI, false);
         this.context.fill();
 
+        // draw hand
         this.context.translate(this.centerX, this.centerY);
         this.context.rotate(rotation);
         this.context.translate(-this.centerX, -this.centerY);
         this.context.fillRect(this.centerX - this.width / 2, this.centerY, this.width, this.length);
+    }
+}
+
+class Storage{
+    save() {
+        localStorage.setItem("mode", mode);
+        localStorage.setItem("worklength", workLength);
+        localStorage.setItem("restlength", restLength);
+        localStorage.setItem("buttonclick", buttonClick);
+        localStorage.setItem("muted", muted);
+        localStorage.setItem("volume", masterVolume);
+    }
+
+    load() {
+        let sMode = localStorage.getItem("mode");
+        if (sMode) mode = sMode;
+    
+        let sWorkLength = localStorage.getItem("worklength");
+        if (sWorkLength) workLength = Number(sWorkLength);
+    
+        let sRestLength = localStorage.getItem("restlength");
+        if (sRestLength) restLength = Number(sRestLength);
+    
+        let sButtonClick = localStorage.getItem("buttonclick");
+        if (sButtonClick) buttonClick = sButtonClick === "true";
+    
+        let sMuted = localStorage.getItem("muted");
+        if (sMuted) muted = sMuted === "true";
+    
+        let sVolume = localStorage.getItem("volume");
+        if (sVolume) masterVolume = Number(sVolume);
     }
 }

@@ -2,15 +2,15 @@ var workLengthSlider = document.querySelector("#workLengthSlider");
 workLengthSlider.setAttribute("value", workLength);
 
 var workLengthLabel = document.querySelector("#workLengthLabel");
-workLengthLabel.innerHTML = "Work Length: " + workLengthSlider.value;
-workLengthSlider.oninput = function () { workLengthLabel.innerHTML = "Work Length: " + this.value }
+workLengthLabel.innerHTML = "Pomodoro Work Length: " + workLengthSlider.value;
+workLengthSlider.oninput = function () { workLengthLabel.innerHTML = "Pomodoro Work Length: " + this.value; };
 
 var restLengthSlider = document.querySelector("#restLengthSlider");
 restLengthSlider.setAttribute("value", restLength);
 
 var restLengthLabel = document.querySelector("#restLengthLabel");
-restLengthLabel.innerHTML = "Break Length: " + restLengthSlider.value;
-restLengthSlider.oninput = function () { restLengthLabel.innerHTML = "Break Length: " + this.value }
+restLengthLabel.innerHTML = "Pomodoro Break Length: " + restLengthSlider.value;
+restLengthSlider.oninput = function () { restLengthLabel.innerHTML = "Pomodori Break Length: " + this.value; };
 
 var volumeSlider = document.querySelector("#volumeSlider");
 volumeSlider.setAttribute("value", masterVolume * 100);
@@ -22,8 +22,19 @@ volumeSlider.oninput = function () { volumeLabel.innerHTML = "Volume: " + this.v
 masterVolume = volumeSlider.value / 100;
 
 document.querySelector("#buttonClickCheckbox").checked = buttonClick;
+document.querySelector("#buttonClickCheckbox").onchange = buttonCheckboxChange;
 
-document.querySelector("#mutebutton").innerText = muted ? "Unmute Sounds" : "Mute Sounds";
+document.querySelector("#muteButton").innerText = muted ? "Unmute Sounds" : "Mute Sounds";
+document.querySelector("#muteButton").onclick = muteButtonClick;
+
+document.querySelector("#workButton").onclick = workButtonClick;
+document.querySelector("#breakButton").onclick = restButtonClick;
+document.querySelector("#clearButton").onclick = clearButtonClick;
+document.querySelector("#optionsButton").onclick = optionsButtonClick;
+document.querySelector("#instructionButton").onclick = instructionsButtonClick;
+document.querySelector("#saveOptionsButton").onclick = saveOptionsButtonClick;
+document.querySelector("#finishedButton").onclick = function(){if (!muted && buttonClick) soundClick(); document.getElementById('instructionsModal').style.marginBottom='-215px'; return false;};
+
 
 // Get the options tab with id="defaultOpen" and click on it
 document.querySelector("#defaultOpen").click();
@@ -32,14 +43,16 @@ function optionsButtonClick() {
     if (!muted && buttonClick) {
         soundClick();
     }
-    document.getElementById('optionsModal').style.marginBottom = '0';
+    document.getElementById("optionsModal").style.marginBottom = "0";
+    return false;
 }
 
 function instructionsButtonClick() {
     if (!muted && buttonClick) {
         soundClick();
     }
-    document.getElementById('instructionsModal').style.marginBottom = '0';
+    document.getElementById("instructionsModal").style.marginBottom = "0";
+    return false;
 }
 
 function workButtonClick() {
@@ -57,6 +70,7 @@ function workButtonClick() {
     resting = false;
     calculateWorkRestRotations(time);
     document.querySelector("#lcd").innerHTML = "WORKING" + (muted ? " (MUTED)" : "");
+    return false;
 }
 
 function restButtonClick() {
@@ -74,6 +88,7 @@ function restButtonClick() {
     working = false;
     calculateRestWorkRotations(time);
     document.querySelector("#lcd").innerHTML = "TAKING A BREAK" + (muted ? " (MUTED)" : "");
+    return false;
 }
 
 function clearButtonClick() {
@@ -92,13 +107,14 @@ function clearButtonClick() {
     working = false;
     document.querySelector("#lcd").innerHTML = "CLOCK MODE";
     workOverlay.clear();
+    return false;
 }
 
 function saveOptionsButtonClick() {
     if (!muted && buttonClick) {
         soundClick();
     }
-    document.getElementById('optionsModal').style.marginBottom = '-215px';
+    document.getElementById("optionsModal").style.marginBottom = "-215px";
 
     workLength = workLengthSlider.value;
     restLength = restLengthSlider.value;
@@ -113,6 +129,7 @@ function saveOptionsButtonClick() {
             calculateRestWorkRotations(new Date(restStartTime));
         }
     }
+    return false;
 }
 
 function muteButtonClick() {
@@ -123,18 +140,19 @@ function muteButtonClick() {
     if (muted) {
         stopSounds();
     }
-    document.querySelector("#mutebutton").innerText = muted ? "Unmute Sounds" : "Mute Sounds";
+    document.querySelector("#muteButton").innerText = muted ? "Unmute Sounds" : "Mute Sounds";
     volumeLabel.innerHTML = "Volume: " + volumeSlider.value + (muted ? " (MUTED)" : "");
     saveOptions();
+    return false;
 }
 
 function openTab(evt, tabName) {
     var i, tabcontent, tablinks;
-    tabcontent = document.getElementsByClassName("tabcontent");
+    tabcontent = document.getElementsByClassName("tabContent");
     for (i = 0; i < tabcontent.length; i++) {
         tabcontent[i].style.display = "none";
     }
-    tablinks = document.getElementsByClassName("tablinks");
+    tablinks = document.getElementsByClassName("tabLinks");
     for (i = 0; i < tablinks.length; i++) {
         tablinks[i].className = tablinks[i].className.replace(" active", "");
     }
@@ -144,6 +162,7 @@ function openTab(evt, tabName) {
 
 function buttonCheckboxChange() {
     buttonClick = document.querySelector("#buttonClickCheckbox").checked;
+    return false;
 }
 
 function calculateWorkRestRotations(starting) {

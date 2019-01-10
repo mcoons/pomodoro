@@ -54,9 +54,6 @@ body {
     border: 16px solid rgba(255, 0, 0, 0);
 }
 
-/* .mydiv {
-    font-family: myfont
-} */
 
 #hands {
     position: absolute;
@@ -72,7 +69,7 @@ body {
     z-index: 5;
 }
 
-.buttoncontainer {
+.buttonContainer {
     margin-left: 6px;
 }
 
@@ -94,7 +91,7 @@ body {
     z-index: 20;
     bottom: 0px;
     height: 200px;
-    width: 250px;
+    width: 252px;
     left: 50%;
     transform: translate(-50%);
     color:white;
@@ -114,10 +111,6 @@ body {
 #optionsModal {
     text-align: center;
 }
-
-/* a {
-    margin-bottom: 50px;
-} */
 
 #lcd {
     color: black;
@@ -283,7 +276,7 @@ body {
     float: left;
     outline: none;
     cursor: pointer;
-    width: 62px;
+    width: 50px;
     padding: 10px 0;
     transition: 0.3s;
     font-weight: bold;
@@ -302,10 +295,14 @@ body {
   }
   
   /* Style the tab content */
-  .tabcontent {
+  .tabContent {
     display: none;
     padding: 10px 0px;
     border: 2px solid white;
     border-top: none;
     height: 95px;
+  }
+
+  .hidden{
+      display: none;
   }
