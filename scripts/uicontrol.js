@@ -12,6 +12,28 @@ var restLengthLabel = document.querySelector("#restLengthLabel");
 restLengthLabel.innerHTML = "Pomodoro Break Length: " + restLengthSlider.value;
 restLengthSlider.oninput = function () { restLengthLabel.innerHTML = "Pomodori Break Length: " + this.value; };
 
+
+var timerLengthMinutesSlider = document.querySelector("#timerLengthMinutesSlider");
+timerLengthMinutesSlider.setAttribute("value", timerMinuteLength);
+
+var timerLengthMinutesLabel = document.querySelector("#timerLengthMinutesLabel");
+timerLengthMinutesLabel.innerHTML = "Timer Minuteds: " + timerLengthMinutesSlider.value;
+timerLengthMinutesSlider.oninput = function () { timerLengthMinutesLabel.innerHTML = "Timer Minutes: " + this.value; };
+
+var timerLengthSecondsSlider = document.querySelector("#timerLengthSecondsSlider");
+timerLengthSecondsSlider.setAttribute("value", timerSecondLength);
+
+var timerLengthSecondsLabel = document.querySelector("#timerLengthSecondsLabel");
+timerLengthSecondsLabel.innerHTML = "Timer Seconds: " + timerLengthSecondsSlider.value;
+timerLengthSecondsSlider.oninput = function () { timerLengthSecondsLabel.innerHTML = "Timer Seconds: " + this.value; };
+
+
+
+
+
+
+
+
 var volumeSlider = document.querySelector("#volumeSlider");
 volumeSlider.setAttribute("value", masterVolume * 100);
 
@@ -35,9 +57,21 @@ document.querySelector("#instructionButton").onclick = instructionsButtonClick;
 document.querySelector("#saveOptionsButton").onclick = saveOptionsButtonClick;
 document.querySelector("#finishedButton").onclick = function(){if (!muted && buttonClick) soundClick(); document.getElementById('instructionsModal').style.marginBottom='-215px'; return false;};
 
+document.querySelectorAll(".mode").forEach( m => m.oninput = modeChange);
 
 // Get the options tab with id="defaultOpen" and click on it
 document.querySelector("#defaultOpen").click();
+
+function modeChange(event){
+    console.log(event.target.value);
+    mode = event.target.value;
+
+    document.querySelectorAll(".pomodoromode").forEach(e => e.classList.add("hidden")); 
+    document.querySelectorAll(".timermode").forEach(e => e.classList.add("hidden")); 
+    document.querySelectorAll(".stopwatchmode").forEach(e => e.classList.add("hidden")); 
+
+    document.querySelectorAll("."+mode.toLowerCase()+"mode").forEach(e => e.classList.remove("hidden"));
+}
 
 function optionsButtonClick() {
     if (!muted && buttonClick) {
@@ -118,6 +152,10 @@ function saveOptionsButtonClick() {
 
     workLength = workLengthSlider.value;
     restLength = restLengthSlider.value;
+
+    timerMinuteLength = timerLengthMinutesSlider.value;
+    timerSecondLength = timerLengthSecondsSlider.value;
+
     masterVolume = volumeSlider.value / 100;
 
     saveOptions();

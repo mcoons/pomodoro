@@ -38,19 +38,3 @@ function stopSounds() {
     if (alarm3) { sound_alarm3.stop(); alarm3 = null; }
     if (alarm4) { sound_alarm4.stop(); alarm4 = null; }
 }
-
-// function toggleAlarm1(){
-//     if (alarm1) {sound_alarm1.stop(); alarm1 = null;} else alarm1 = soundAlarm1();
-// }
-
-// function toggleAlarm2(){
-//     if (alarm2) {sound_alarm2.stop(); alarm2 = null;} else alarm2 = soundAlarm2();
-// }
-
-// function toggleAlarm3(){
-//     if (alarm3) {sound_alarm3.stop(); alarm3 = null;} else alarm3 = soundAlarm3();
-// }
-
-// function toggleAlarm4(){
-//     if (alarm4) {sound_alarm4.stop(); alarm4 = null;} else alarm4 = soundAlarm4();
-// }

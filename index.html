@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Pomodoro Clock</title>
     <link rel="stylesheet" href="style/style.css" type="text/css" media="all">
+    <script src="scripts/howler.js" defer></script>
     <script src="scripts/storage.js" defer></script>
     <script src="scripts/Log.js" defer></script>
     <script src="scripts/classes.js" defer></script>
     <script src="scripts/main.js" defer></script>
-    <script src="scripts/howler.js" defer></script>
     <script src="scripts/sounds.js" defer></script>
     <script src="scripts/uicontrol.js" defer></script>
 </head>
@@ -51,9 +51,22 @@
                 </div>
 
                 <div id="Mode" class="tabContent">
-                    <p>Pomodoro</p>
-                    <p>Timer</p>
-                    <p>Stopwatch</p>
+                    <div id="modes">
+                        <label for="pomodoro">
+                            <input class="mode" type="radio" id="pomodoroMode" name="modes" value="Pomodoro" checked>
+                            Pomodoro
+                        </label>
+                        <br>
+                        <label for="timer">
+                            <input class="mode" type="radio" id="timerMode" name="modes" value="Timer">
+                            Timer
+                        </label>
+                        <br>              
+                        <label for="stopwatch">
+                            <input class="mode" type="radio" id="stopwatchMode" name="modes" value="Stopwatch">
+                            Stopwatch
+                        </label>
+                    </div> 
                 </div>
 
                 <div id="Time" class="tabContent">
@@ -70,7 +83,14 @@
                     </div>
 
                     <div class="timermode hidden">
-                        <p>Timer options</p>
+                        <label id="timerLengthMinutesLabel">Timer Minutes:</label>
+                        <div class="slidecontainer">
+                            <input id="timerLengthMinutesSlider" type="range" min="0" max="60" step="1" class="slider">
+                        </div>
+                        <label id="timerLengthSecondsLabel">Timer Seconds:</label>
+                        <div class="slidecontainer">
+                            <input id="timerLengthSecondsSlider" type="range" min="0" max="60" step="1" class="slider">
+                        </div>
                     </div>
 
                     <div class="stopwatchmode hidden">

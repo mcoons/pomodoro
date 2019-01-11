@@ -12,6 +12,12 @@ function loadOptions() {
     let sRestLength = localStorage.getItem("restlength");
     if (sRestLength) restLength = Number(sRestLength);
 
+    let sTimerMinuteLength = localStorage.getItem("timerminutelength");
+    if (sTimerMinuteLength) timerMinuteLength = Number(sTimerMinuteLength);
+
+    let sTimerSecondLength = localStorage.getItem("timersecondlength");
+    if (sTimerSecondLength) timerSecondLength = Number(sTimerSecondLength);
+
     let sButtonClick = localStorage.getItem("buttonclick");
     if (sButtonClick) buttonClick = sButtonClick === "true";
 
@@ -26,6 +32,8 @@ function saveOptions() {
     localStorage.setItem("mode", mode);
     localStorage.setItem("worklength", workLength);
     localStorage.setItem("restlength", restLength);
+    localStorage.setItem("timerminutelength", timerMinuteLength);
+    localStorage.setItem("timersecondlength", timerSecondLength);
     localStorage.setItem("buttonclick", buttonClick);
     localStorage.setItem("muted", muted);
     localStorage.setItem("volume", masterVolume);

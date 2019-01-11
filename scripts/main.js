@@ -23,11 +23,13 @@ var workColor = "rgba( 0, 250, 0, " + overlayAlpha + " )";
 var restColor = "rgba( 250, 0, 0, " + overlayAlpha + " )";
 
 // Set option defaults prior to attempting to load options from local storage
-var mode = "pomodoro";
+var mode = "Pomodoro";
 var muted = false;
 var buttonClick = true;
 var workLength = 15;  // minutes
 var restLength = 1;   // minutes
+var timerMinuteLength = 5;
+var timerSecondLength = 0;
 var masterVolume = .5;
 
 loadOptions();  // from local storage ... defined in storage.js
