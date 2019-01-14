@@ -13,11 +13,13 @@ restLengthLabel.innerHTML = "Pomodoro Break Length: " + restLengthSlider.value;
 restLengthSlider.oninput = function () { restLengthLabel.innerHTML = "Pomodori Break Length: " + this.value; };
 
 
+
+
 var timerLengthMinutesSlider = document.querySelector("#timerLengthMinutesSlider");
 timerLengthMinutesSlider.setAttribute("value", timerMinuteLength);
 
 var timerLengthMinutesLabel = document.querySelector("#timerLengthMinutesLabel");
-timerLengthMinutesLabel.innerHTML = "Timer Minuteds: " + timerLengthMinutesSlider.value;
+timerLengthMinutesLabel.innerHTML = "Timer Minutes: " + timerLengthMinutesSlider.value;
 timerLengthMinutesSlider.oninput = function () { timerLengthMinutesLabel.innerHTML = "Timer Minutes: " + this.value; };
 
 var timerLengthSecondsSlider = document.querySelector("#timerLengthSecondsSlider");
@@ -49,20 +51,40 @@ document.querySelector("#buttonClickCheckbox").onchange = buttonCheckboxChange;
 document.querySelector("#muteButton").innerText = muted ? "Unmute Sounds" : "Mute Sounds";
 document.querySelector("#muteButton").onclick = muteButtonClick;
 
-document.querySelector("#workButton").onclick = workButtonClick;
-document.querySelector("#breakButton").onclick = restButtonClick;
+document.querySelector("#startButton").onclick = startButtonClick;
+// document.querySelector("#startButton").innerText = 
+//     mode = "Pomodoro" ? "Start Working" :
+//     mode = "Timer" ? "Start Timer" :
+//     "Start Stopwatch";
+
+document.querySelector("#endButton").onclick = endButtonClick;
+// document.querySelector("#endButton").innerText =
+//     mode = "Pomodoro" ? "Start Breaking" :
+//     mode = "Timer" ? "End Timer" :
+//     "End Stopwatch";
+
 document.querySelector("#clearButton").onclick = clearButtonClick;
 document.querySelector("#optionsButton").onclick = optionsButtonClick;
 document.querySelector("#instructionButton").onclick = instructionsButtonClick;
 document.querySelector("#saveOptionsButton").onclick = saveOptionsButtonClick;
 document.querySelector("#finishedButton").onclick = function(){if (!muted && buttonClick) soundClick(); document.getElementById('instructionsModal').style.marginBottom='-215px'; return false;};
 
-document.querySelectorAll(".mode").forEach( m => m.oninput = modeChange);
+
+document.querySelectorAll(".mode").forEach( m => m.checked=false );
+// document.querySelector("#"+mode.toLowerCase()+"Mode").checked = true;
+document.querySelectorAll(".mode").forEach( m => m.oninput = modeChange );
+document.querySelector("#"+mode.toLowerCase()+"Mode").click();
+
+
+
 
 // Get the options tab with id="defaultOpen" and click on it
 document.querySelector("#defaultOpen").click();
 
 function modeChange(event){
+
+    // clear all functions???  allow simultanious functions??? ***
+
     console.log(event.target.value);
     mode = event.target.value;
 
@@ -71,6 +93,17 @@ function modeChange(event){
     document.querySelectorAll(".stopwatchmode").forEach(e => e.classList.add("hidden")); 
 
     document.querySelectorAll("."+mode.toLowerCase()+"mode").forEach(e => e.classList.remove("hidden"));
+
+    document.querySelector("#startButton").innerText = 
+        mode === "Pomodoro" ? "Start Working" :
+        mode === "Timer" ? "Start Timer" :
+        "Start Stopwatch";
+
+    document.querySelector("#endButton").innerText =
+        mode === "Pomodoro" ? "Start Breaking" :
+        mode === "Timer" ? "End Timer" :
+        "End Stopwatch";
+
 }
 
 function optionsButtonClick() {
@@ -89,39 +122,95 @@ function instructionsButtonClick() {
     return false;
 }
 
-function workButtonClick() {
+function startButtonClick() {
     if (!muted && buttonClick) {
         soundClick();
     }
+
     let time = new Date();
-    if (!working || log.last() === "End Work Alarm") {
-        log.add({ "Work Button": time });
+
+
+    switch (mode) {
+        case "Pomodoro":  // start working
+            if (!working || log.last() === "End Work Alarm") {
+                log.add({ "Work Button": time });
+            }
+            stopSounds();
+            document.querySelector("#led-red").classList.remove("led-red-blink");
+            document.querySelector("#led-green").classList.remove("led-green-blink");
+            working = true;
+            resting = false;
+            calculateWorkRestRotations(time);
+            document.querySelector("#lcd").innerHTML = "WORKING" + (muted ? " (MUTED)" : "");            
+        break;
+    
+        case "Timer":  // start timer
+            if (!timing || log.last() === "End Timer Alarm"){
+                log.add({"Timer Start Button": time });
+            }
+            stopSounds();
+            document.querySelector("#led-red").classList.remove("led-red-blink");
+            document.querySelector("#led-green").classList.remove("led-green-blink");
+            timing = true;
+            calculateTimerRotations(time);
+            document.querySelector("#lcd").innerHTML = "TIMING" + (muted ? " (MUTED)" : "");            
+        break;
+
+        case "Stopwatch":  // start stopwatch
+
+        break;
+
+        default:
+            console.log("ERROR: mode error in startButtonClick()")
+        break;
     }
-    stopSounds();
-    document.querySelector("#led-red").classList.remove("led-red-blink");
-    document.querySelector("#led-green").classList.remove("led-green-blink");
-    working = true;
-    resting = false;
-    calculateWorkRestRotations(time);
-    document.querySelector("#lcd").innerHTML = "WORKING" + (muted ? " (MUTED)" : "");
+
+
     return false;
 }
 
-function restButtonClick() {
+function endButtonClick() {
     if (!muted && buttonClick) {
         soundClick();
     }
     let time = new Date();
-    if (!resting || log.last() === "End Break Alarm") {
-        log.add({ "Break Button": time });
+
+    switch (mode) {
+        case "Pomodoro":  // start breaking
+            if (!resting || log.last() === "End Break Alarm") {
+                log.add({ "Break Button": time });
+            }
+            stopSounds();
+            document.querySelector("#led-red").classList.remove("led-red-blink");
+            document.querySelector("#led-green").classList.remove("led-green-blink");
+            resting = true;
+            working = false;
+            calculateRestWorkRotations(time);
+            document.querySelector("#lcd").innerHTML = "TAKING A BREAK" + (muted ? " (MUTED)" : "");
+        break;
+    
+        case "Timer":  // end timer
+            if (!timing || log.last() === "End Timer Alarm") {
+                log.add({ "End Timer Button": time });
+            }
+            stopSounds();
+            document.querySelector("#led-red").classList.remove("led-red-blink");
+            document.querySelector("#led-green").classList.remove("led-green-blink");
+            timing = false;
+            timerOverlay.clear();
+            // document.querySelector("#lcd").innerHTML = "TAKING A BREAK" + (muted ? " (MUTED)" : "");
+
+        break;
+
+        case "Stopwatch":  // end stopwatch
+
+        break;
+
+        default:
+            console.log("ERROR: mode error in endButtonClick()")
+        break;
     }
-    stopSounds();
-    document.querySelector("#led-red").classList.remove("led-red-blink");
-    document.querySelector("#led-green").classList.remove("led-green-blink");
-    resting = true;
-    working = false;
-    calculateRestWorkRotations(time);
-    document.querySelector("#lcd").innerHTML = "TAKING A BREAK" + (muted ? " (MUTED)" : "");
+
     return false;
 }
 
@@ -129,7 +218,7 @@ function clearButtonClick() {
     if (!muted && buttonClick) {
         soundClick();
     }
-    if (working || resting) {
+    if (working || resting || timing || stopwatching) {
         log.add({ "Clear Button": new Date() })
     } else {
         return;
@@ -139,8 +228,11 @@ function clearButtonClick() {
     document.querySelector("#led-green").classList.remove("led-green-blink");
     resting = false;
     working = false;
-    document.querySelector("#lcd").innerHTML = "CLOCK MODE";
+    timing = false;
+    stopwatching = false;
+    document.querySelector("#lcd").innerHTML = mode.toUpperCase() + " MODE";
     workOverlay.clear();
+    timerOverlay.clear();
     return false;
 }
 
@@ -162,11 +254,14 @@ function saveOptionsButtonClick() {
 
     if (working) {
         calculateWorkRestRotations(new Date(workStartTime));
-    } else {
-        if (resting) {
-            calculateRestWorkRotations(new Date(restStartTime));
-        }
+    } else 
+    if (resting) {
+        calculateRestWorkRotations(new Date(restStartTime));
+    } else
+    if (timing) {
+        calculateTimerRotations(new Date(timerStartTime));
     }
+    
     return false;
 }
 
@@ -245,4 +340,31 @@ function calculateRestWorkRotations(starting) {
 
     workStartRotation = ((workStartTime.getMinutes() * 360 / 60) + (sec * (360 / 60) / 60)) * Math.PI / 180 - Math.PI / 2;
     workEndRotation = ((workEndTime.getMinutes() * 360 / 60) + (sec * (360 / 60) / 60)) * Math.PI / 180 - Math.PI / 2;
+}
+
+function calculateTimerRotations(starting) {
+    let baseTime = new Date(starting.getTime());
+    let sec = baseTime.getSeconds();
+    sec += baseTime.getMilliseconds()/1000;
+
+    if (Number(timerLengthMinutesSlider.value) > 0 || (Number(timerLengthMinutesSlider.value) === 0 && Number(timerLengthSecondsSlider.value) === 60)) {
+        timerStartTime = new Date(baseTime.getTime());
+        timerEndTime = new Date(timerStartTime.getTime());
+        let newTimerMinutes = timerEndTime.getMinutes() + Number(timerLengthMinutesSlider.value);
+        timerEndTime.setMinutes(newTimerMinutes);   
+        let newTimerSeconds = timerEndTime.getSeconds() + Number(timerLengthSecondsSlider.value); 
+        timerEndTime.setSeconds(newTimerSeconds);
+        
+        timerStartRotation = ((timerStartTime.getMinutes() * 360 / 60) + (sec * (360 / 60) / 60)) * Math.PI / 180 - Math.PI / 2;
+        timerEndRotation = ((timerEndTime.getMinutes() * 360 / 60) + (timerEndTime.getSeconds() * 360 / 60 / 60)) * Math.PI / 180 - Math.PI / 2;
+    } else {
+        timerStartTime = new Date(baseTime.getTime());
+        timerEndTime = new Date(timerStartTime.getTime());
+        let newTimerSeconds = timerEndTime.getSeconds() + Number(timerLengthSecondsSlider.value); 
+        timerEndTime.setSeconds(newTimerSeconds);
+        
+        timerStartRotation = (sec * 360 / 60) * Math.PI / 180 - Math.PI / 2;
+        timerEndRotation = ((sec + Number(timerLengthSecondsSlider.value)) * 360 / 60 ) * Math.PI / 180 - Math.PI / 2;
+
+    }
 }

@@ -14,13 +14,17 @@ clockShadow.width = clockShadow.height = CLOCKWIDTH;
 
 var workStartRotation = workEndRotation = restStartRotation = restEndRotation = null;
 var workStartTime = workEndTime = restStartTime = restEndTime = null;
-var working = resting = false;
+var timerStartTime = timerEndTime = null;
+var stopwatchStartTime = null;
+var working = resting = timing = stopwatching = false;
 const overlayAlpha = .3;
 
 // options that still need to be saved to local storage
 var logging = false;
-var workColor = "rgba( 0, 250, 0, " + overlayAlpha + " )";
 var restColor = "rgba( 250, 0, 0, " + overlayAlpha + " )";
+var workColor = "rgba( 0, 250, 0, " + overlayAlpha + " )";
+var timerColor = "rgba( 0, 0, 255, " + overlayAlpha + " )";
+var stopwatchColor = "rgba( 255, 0, 255, " + overlayAlpha + " )";
 
 // Set option defaults prior to attempting to load options from local storage
 var mode = "Pomodoro";
@@ -48,6 +52,9 @@ workOverlay.setColor(workColor);
 let restOverlay = new Overlay(CLOCKWIDTH);
 restOverlay.setColor(restColor);
 
+let timerOverlay  = new Overlay(CLOCKWIDTH);
+timerOverlay.setColor(timerColor);
+
 face.draw();
 setInterval(refreshClock, 50);
 
@@ -65,53 +72,104 @@ function refreshClock() {
 
     drawHands(hrRotation, minRotation, secRotation);
 
-    if (working && workEndTime < baseTime) {
-        if (!alarm1 && !muted) {
-            alarm1 = soundAlarm1();
+    if (!working && !resting && !timing && !stopwatching) {
+        document.querySelector("#lcd").innerHTML = mode.toUpperCase() + " MODE&#10;" + baseTime.toLocaleTimeString();
+    }
+
+    switch (mode) {
+        case "Pomodoro":
+            pomodoroLogic();
+        break;
+
+        case "Timer":
+            timerLogic();
+        break;
+
+        case "Stopwatch":
+            stopwatchLogic();
+        break;
+    
+        default:
+            console.log("ERROR: mode error in refreshClock()")
+        break;
+    }
+
+
+    function pomodoroLogic(){
+        if (working && workEndTime < baseTime) {
+            if (!alarm1 && !muted) {
+                alarm1 = soundAlarm1();
+            }
+            document.querySelector("#led-red").classList.add("led-red-blink");
+            document.querySelector("#lcd").innerHTML = "BREAK TIME" + (muted ? " (MUTED)" : "") + "&#10;" + (baseTime.getSeconds() % 2 === 0 ? "PRESS 'START BREAKING'" : "");
+            if (log.last() != "End Work Alarm") {
+                log.add({"End Work Alarm": new Date()});
+            }
+        } else {
+            if (working && workEndTime > baseTime) {
+                let timeDiff = (workEndTime - baseTime) / 60 / 1000;
+                let minutesLeft = Math.trunc(timeDiff);
+                let secondsLeft = ("0" + (Math.trunc(timeDiff % 1 * 60).toString())).slice(-2);
+                document.querySelector("#lcd").innerHTML = "WORKING" + (muted ? " (MUTED)" : "") + "&#10;" + minutesLeft + ":" + secondsLeft;
+            }
         }
-        document.querySelector("#led-red").classList.add("led-red-blink");
-        document.querySelector("#lcd").innerHTML = "BREAK TIME" + (muted ? " (MUTED)" : "") + "&#10;" + (baseTime.getSeconds() % 2 === 0 ? "PRESS 'START BREAKING'" : "");
-        if (log.last() != "End Work Alarm") {
-            log.add({"End Work Alarm": new Date()});
+
+        if (resting && restEndTime < baseTime) {
+            if (!alarm2 && !muted) {
+                alarm2 = soundAlarm2();
+            }
+            document.querySelector("#led-green").classList.add("led-green-blink");
+            document.querySelector("#lcd").innerHTML = "TIME TO WORK" + (muted ? " (MUTED)" : "") + "&#10;" + (baseTime.getSeconds() % 2 === 0 ? "PRESS 'START WORKING'" : "");
+            if (log.last() != "End Break Alarm") {
+                log.add({"End Break Alarm": new Date()});
+            }
+        } else {
+            if (resting && restEndTime > baseTime) {
+                let timeDiff = (restEndTime - baseTime) / 60 / 1000;
+                let minutesLeft = Math.trunc(timeDiff);
+                let secondsLeft = ("0" + (Math.trunc(timeDiff % 1 * 60).toString())).slice(-2);
+                document.querySelector("#lcd").innerHTML = "TAKING A BREAK" + (muted ? " (MUTED)" : "") + "&#10;" + minutesLeft + ":" + secondsLeft;
+            }
         }
-    } else {
-        if (working && workEndTime > baseTime) {
-            let timeDiff = (workEndTime - baseTime) / 60 / 1000;
-            let minutesLeft = Math.trunc(timeDiff);
-            let secondsLeft = ("0" + (Math.trunc(timeDiff % 1 * 60).toString())).slice(-2);
-            document.querySelector("#lcd").innerHTML = "WORKING" + (muted ? " (MUTED)" : "") + "&#10;" + minutesLeft + ":" + secondsLeft;
+
+        if (working || resting) {
+            drawOverlays(workStartRotation, workEndRotation, restStartRotation, restEndRotation);
         }
     }
 
-    if (resting && restEndTime < baseTime) {
-        if (!alarm2 && !muted) {
-            alarm2 = soundAlarm2();
+    function timerLogic(){
+        if (timing && timerEndTime < baseTime) {
+            if (!alarm1 && !muted) {
+                alarm1 = soundAlarm1();
+            }
+            document.querySelector("#led-red").classList.add("led-red-blink");
+            document.querySelector("#lcd").innerHTML = "TIMER" + (muted ? " (MUTED)" : "") + "&#10;" + "0:00";
+
+        } else {
+            if (timing && timerEndTime > baseTime) {
+                let timeDiff = (timerEndTime - baseTime) / 60 / 1000;
+                let minutesLeft = Math.trunc(timeDiff);
+                let secondsLeft = Math.trunc(timeDiff % 1 * 60 + 1);
+                if (secondsLeft === 60) {minutesLeft++; secondsLeft = 0};
+                secondsLeft = ("0" + secondsLeft.toString()).slice(-2);
+                document.querySelector("#lcd").innerHTML = "TIMER" + (muted ? " (MUTED)" : "") + "&#10;" + minutesLeft + ":" + secondsLeft;
+            }
         }
-        document.querySelector("#led-green").classList.add("led-green-blink");
-        document.querySelector("#lcd").innerHTML = "TIME TO WORK" + (muted ? " (MUTED)" : "") + "&#10;" + (baseTime.getSeconds() % 2 === 0 ? "PRESS 'START WORKING'" : "");
-        if (log.last() != "End Break Alarm") {
-            log.add({"End Break Alarm": new Date()});
-        }
-    } else {
-        if (resting && restEndTime > baseTime) {
-            let timeDiff = (restEndTime - baseTime) / 60 / 1000;
-            let minutesLeft = Math.trunc(timeDiff);
-            let secondsLeft = ("0" + (Math.trunc(timeDiff % 1 * 60).toString())).slice(-2);
-            document.querySelector("#lcd").innerHTML = "TAKING A BREAK" + (muted ? " (MUTED)" : "") + "&#10;" + minutesLeft + ":" + secondsLeft;
+        
+        if (timing) {
+            timerOverlay.clear();
+            timerOverlay.draw(timerStartRotation, timerEndRotation);
         }
     }
 
-    if (working || resting) {
-        drawOverlays(workStartRotation, workEndRotation, restStartRotation, restEndRotation);
-    }
+    function stopwatchLogic(){
+        // is stopwatch running ? draw new overlay and update lcd : leave overlay alone
 
-    if (!working && !resting) {
-        document.querySelector("#lcd").innerHTML = "CLOCK MODE&#10;" + baseTime.toLocaleTimeString();
     }
 }
 
 function drawHands(hrRotation, minRotation, secRotation) {
-    hourHand.clear();
+    hourHand.clear();  // clears all hands on canvas
     hourHand.draw(hrRotation);
     minuteHand.draw(minRotation);
     secondHand.draw(secRotation);
