@@ -74,6 +74,7 @@ function refreshClock() {
 
     if (!working && !resting && !timing && !stopwatching) {
         document.querySelector("#lcd").innerHTML = mode.toUpperCase() + " MODE&#10;" + baseTime.toLocaleTimeString();
+        // ?? return; ??
     }
 
     switch (mode) {
@@ -110,7 +111,7 @@ function refreshClock() {
                 let timeDiff = (workEndTime - baseTime) / 60 / 1000;
                 let minutesLeft = Math.trunc(timeDiff);
                 let secondsLeft = ("0" + (Math.trunc(timeDiff % 1 * 60).toString())).slice(-2);
-                document.querySelector("#lcd").innerHTML = "WORKING" + (muted ? " (MUTED)" : "") + "&#10;" + minutesLeft + ":" + secondsLeft;
+                document.querySelector("#lcd").innerHTML = "POMODORO WORKING" + (muted ? " (MUTED)" : "") + "&#10;" + minutesLeft + ":" + secondsLeft;
             }
         }
 
@@ -128,7 +129,7 @@ function refreshClock() {
                 let timeDiff = (restEndTime - baseTime) / 60 / 1000;
                 let minutesLeft = Math.trunc(timeDiff);
                 let secondsLeft = ("0" + (Math.trunc(timeDiff % 1 * 60).toString())).slice(-2);
-                document.querySelector("#lcd").innerHTML = "TAKING A BREAK" + (muted ? " (MUTED)" : "") + "&#10;" + minutesLeft + ":" + secondsLeft;
+                document.querySelector("#lcd").innerHTML = "POMODORO BREAKING" + (muted ? " (MUTED)" : "") + "&#10;" + minutesLeft + ":" + secondsLeft;
             }
         }
 
@@ -143,7 +144,7 @@ function refreshClock() {
                 alarm1 = soundAlarm1();
             }
             document.querySelector("#led-red").classList.add("led-red-blink");
-            document.querySelector("#lcd").innerHTML = "TIMER" + (muted ? " (MUTED)" : "") + "&#10;" + "0:00";
+            document.querySelector("#lcd").innerHTML = "TIMING" + (muted ? " (MUTED)" : "") + "&#10;" + "0:00";
 
         } else {
             if (timing && timerEndTime > baseTime) {
@@ -152,7 +153,7 @@ function refreshClock() {
                 let secondsLeft = Math.trunc(timeDiff % 1 * 60 + 1);
                 if (secondsLeft === 60) {minutesLeft++; secondsLeft = 0};
                 secondsLeft = ("0" + secondsLeft.toString()).slice(-2);
-                document.querySelector("#lcd").innerHTML = "TIMER" + (muted ? " (MUTED)" : "") + "&#10;" + minutesLeft + ":" + secondsLeft;
+                document.querySelector("#lcd").innerHTML = "TIMING" + (muted ? " (MUTED)" : "") + "&#10;" + minutesLeft + ":" + secondsLeft;
             }
         }
         
@@ -176,7 +177,7 @@ function drawHands(hrRotation, minRotation, secRotation) {
 }
 
 function drawOverlays(workStartRotation, workEndRotation, restStartRotation, restEndRotation) {
-    workOverlay.clear();
+    workOverlay.clear();  // clears all overlays on canvas
     workOverlay.draw(workStartRotation, workEndRotation);
     restOverlay.draw(restStartRotation, restEndRotation);
 }

@@ -1,3 +1,5 @@
+
+// Set the pomodoro UI controls
 var workLengthSlider = document.querySelector("#workLengthSlider");
 workLengthSlider.setAttribute("value", workLength);
 
@@ -13,8 +15,7 @@ restLengthLabel.innerHTML = "Pomodoro Break Length: " + restLengthSlider.value;
 restLengthSlider.oninput = function () { restLengthLabel.innerHTML = "Pomodori Break Length: " + this.value; };
 
 
-
-
+// Set timer UI controls
 var timerLengthMinutesSlider = document.querySelector("#timerLengthMinutesSlider");
 timerLengthMinutesSlider.setAttribute("value", timerMinuteLength);
 
@@ -30,12 +31,7 @@ timerLengthSecondsLabel.innerHTML = "Timer Seconds: " + timerLengthSecondsSlider
 timerLengthSecondsSlider.oninput = function () { timerLengthSecondsLabel.innerHTML = "Timer Seconds: " + this.value; };
 
 
-
-
-
-
-
-
+// Set the volume UI controls
 var volumeSlider = document.querySelector("#volumeSlider");
 volumeSlider.setAttribute("value", masterVolume * 100);
 
@@ -45,6 +41,7 @@ volumeSlider.oninput = function () { volumeLabel.innerHTML = "Volume: " + this.v
 
 masterVolume = volumeSlider.value / 100;
 
+// Initialize buttons
 document.querySelector("#buttonClickCheckbox").checked = buttonClick;
 document.querySelector("#buttonClickCheckbox").onchange = buttonCheckboxChange;
 
@@ -52,17 +49,7 @@ document.querySelector("#muteButton").innerText = muted ? "Unmute Sounds" : "Mut
 document.querySelector("#muteButton").onclick = muteButtonClick;
 
 document.querySelector("#startButton").onclick = startButtonClick;
-// document.querySelector("#startButton").innerText = 
-//     mode = "Pomodoro" ? "Start Working" :
-//     mode = "Timer" ? "Start Timer" :
-//     "Start Stopwatch";
-
 document.querySelector("#endButton").onclick = endButtonClick;
-// document.querySelector("#endButton").innerText =
-//     mode = "Pomodoro" ? "Start Breaking" :
-//     mode = "Timer" ? "End Timer" :
-//     "End Stopwatch";
-
 document.querySelector("#clearButton").onclick = clearButtonClick;
 document.querySelector("#optionsButton").onclick = optionsButtonClick;
 document.querySelector("#instructionButton").onclick = instructionsButtonClick;
@@ -70,12 +57,10 @@ document.querySelector("#saveOptionsButton").onclick = saveOptionsButtonClick;
 document.querySelector("#finishedButton").onclick = function(){if (!muted && buttonClick) soundClick(); document.getElementById('instructionsModal').style.marginBottom='-215px'; return false;};
 
 
+// Set the mode options panel
 document.querySelectorAll(".mode").forEach( m => m.checked=false );
-// document.querySelector("#"+mode.toLowerCase()+"Mode").checked = true;
 document.querySelectorAll(".mode").forEach( m => m.oninput = modeChange );
 document.querySelector("#"+mode.toLowerCase()+"Mode").click();
-
-
 
 
 // Get the options tab with id="defaultOpen" and click on it
@@ -84,6 +69,16 @@ document.querySelector("#defaultOpen").click();
 function modeChange(event){
 
     // clear all functions???  allow simultanious functions??? ***
+    stopSounds();
+    document.querySelector("#led-red").classList.remove("led-red-blink");
+    document.querySelector("#led-green").classList.remove("led-green-blink");
+    resting = false;
+    working = false;
+    timing = false;
+    stopwatching = false;
+    // document.querySelector("#lcd").innerHTML = mode.toUpperCase() + " MODE";
+    workOverlay.clear();
+    timerOverlay.clear();
 
     console.log(event.target.value);
     mode = event.target.value;
@@ -141,7 +136,7 @@ function startButtonClick() {
             working = true;
             resting = false;
             calculateWorkRestRotations(time);
-            document.querySelector("#lcd").innerHTML = "WORKING" + (muted ? " (MUTED)" : "");            
+            // document.querySelector("#lcd").innerHTML = "POMODORO WORKING" + (muted ? " (MUTED)" : "");            
         break;
     
         case "Timer":  // start timer
@@ -153,7 +148,7 @@ function startButtonClick() {
             document.querySelector("#led-green").classList.remove("led-green-blink");
             timing = true;
             calculateTimerRotations(time);
-            document.querySelector("#lcd").innerHTML = "TIMING" + (muted ? " (MUTED)" : "");            
+            // document.querySelector("#lcd").innerHTML = "TIMING" + (muted ? " (MUTED)" : "");            
         break;
 
         case "Stopwatch":  // start stopwatch
@@ -186,7 +181,7 @@ function endButtonClick() {
             resting = true;
             working = false;
             calculateRestWorkRotations(time);
-            document.querySelector("#lcd").innerHTML = "TAKING A BREAK" + (muted ? " (MUTED)" : "");
+            document.querySelector("#lcd").innerHTML = "POMODORO BREAKING" + (muted ? " (MUTED)" : "");
         break;
     
         case "Timer":  // end timer
@@ -218,11 +213,13 @@ function clearButtonClick() {
     if (!muted && buttonClick) {
         soundClick();
     }
+
     if (working || resting || timing || stopwatching) {
         log.add({ "Clear Button": new Date() })
     } else {
         return;
     }
+
     stopSounds();
     document.querySelector("#led-red").classList.remove("led-red-blink");
     document.querySelector("#led-green").classList.remove("led-green-blink");
@@ -230,7 +227,7 @@ function clearButtonClick() {
     working = false;
     timing = false;
     stopwatching = false;
-    document.querySelector("#lcd").innerHTML = mode.toUpperCase() + " MODE";
+    // document.querySelector("#lcd").innerHTML = mode.toUpperCase() + " MODE";
     workOverlay.clear();
     timerOverlay.clear();
     return false;

@@ -6,10 +6,10 @@ function loadOptions() {
     let sMode = localStorage.getItem("mode");
     if (sMode) mode = sMode;
 
-    let sWorkLength = localStorage.getItem("worklength");
+    let sWorkLength = localStorage.getItem("pomodoroworklength");
     if (sWorkLength) workLength = Number(sWorkLength);
 
-    let sRestLength = localStorage.getItem("restlength");
+    let sRestLength = localStorage.getItem("pomodororestlength");
     if (sRestLength) restLength = Number(sRestLength);
 
     let sTimerMinuteLength = localStorage.getItem("timerminutelength");
@@ -30,8 +30,8 @@ function loadOptions() {
 
 function saveOptions() {
     localStorage.setItem("mode", mode);
-    localStorage.setItem("worklength", workLength);
-    localStorage.setItem("restlength", restLength);
+    localStorage.setItem("pomodoroworklength", workLength);
+    localStorage.setItem("pomodororestlength", restLength);
     localStorage.setItem("timerminutelength", timerMinuteLength);
     localStorage.setItem("timersecondlength", timerSecondLength);
     localStorage.setItem("buttonclick", buttonClick);
