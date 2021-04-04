@@ -58,6 +58,10 @@ timerOverlay.setColor(timerColor);
 face.draw();
 setInterval(refreshClock, 50);
 
+// Remove hider element
+
+document.querySelector(".hider").style.display = "none";
+
 function refreshClock() {
     var baseTime = new Date();
     var hr = baseTime.getHours();
@@ -89,7 +93,7 @@ function refreshClock() {
         case "Stopwatch":
             stopwatchLogic();
         break;
-    
+
         default:
             console.log("ERROR: mode error in refreshClock()")
         break;

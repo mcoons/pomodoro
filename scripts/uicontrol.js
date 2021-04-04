@@ -43,7 +43,7 @@ masterVolume = volumeSlider.value / 100;
 
 // Initialize buttons
 document.querySelector("#buttonClickCheckbox").checked = buttonClick;
-document.querySelector("#buttonClickCheckbox").onchange = buttonCheckboxChange;
+document.querySelector("#buttonClickCheckbox").onchange = buttonClickCheckboxChange;
 
 document.querySelector("#muteButton").innerText = muted ? "Unmute Sounds" : "Mute Sounds";
 document.querySelector("#muteButton").onclick = muteButtonClick;
@@ -290,7 +290,7 @@ function openTab(evt, tabName) {
     evt.currentTarget.className += " active";
 }
 
-function buttonCheckboxChange() {
+function buttonClickCheckboxChange() {
     buttonClick = document.querySelector("#buttonClickCheckbox").checked;
     return false;
 }

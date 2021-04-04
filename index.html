@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Pomodoro Clock</title>
     <link rel="stylesheet" href="style/style.css" type="text/css" media="all">
+    <script src="scripts/classes.js" defer></script>
     <script src="scripts/howler.js" defer></script>
     <script src="scripts/storage.js" defer></script>
     <script src="scripts/Log.js" defer></script>
-    <script src="scripts/classes.js" defer></script>
     <script src="scripts/main.js" defer></script>
     <script src="scripts/sounds.js" defer></script>
     <script src="scripts/uicontrol.js" defer></script>
@@ -63,7 +63,7 @@
                         </label>
                         <br>              
                         <label for="stopwatch">
-                            <input class="mode" type="radio" id="stopwatchMode" name="modes" value="Stopwatch">
+                            <input class="mode" type="radio" id="stopwatchMode" name="modes" value="Stopwatch" disabled>
                             Stopwatch
                         </label>
                     </div> 
@@ -131,10 +131,12 @@
             <div id="instructionsModal" >
                 <a href="https://en.wikipedia.org/wiki/Pomodoro_Technique" target="blank">Pomodoro Technique</a>
                 <div>Click 'Start Working' to begin.<br/><br/>When the break alarm sounds, press the 'Start Breaking' button to silence the alarm and schedule the next working period. When the break is over, press the 'Start Working' button to silence the alarm.</div>
-
+                <div><a href="mailto:mc@michaelcoons.tech?Subject=Pomodoro%20Feedback" target="_top">Feedback</a></div>
                 <button class="button" id="finishedButton">Finished</button>
             </div>
         </div>
     </main>
+    <canvas class="hider"></canvas>
+
 </body>
 </html>
