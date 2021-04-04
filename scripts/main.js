@@ -1,55 +1,66 @@
-let BOXWIDTH = 270;
-let CLOCKWIDTH = BOXWIDTH - 50;
-var CENTERX = CENTERY = CLOCKWIDTH / 2;
+const BOXWIDTH = 270;
+const CLOCKWIDTH = BOXWIDTH - 50;
+const CENTERX = CENTERY = CLOCKWIDTH / 2;
 
-var workLength = 15;  // minutes
-var restLength = 1;   // minutes
-var working = resting = false;
+var appContainer = document.querySelector("#appcontainer");
+appContainer.style.width = BOXWIDTH + "px";
+appContainer.style.height = BOXWIDTH + 210 + "px";
 
-var overlayAlpha = .3;
-var workColor = "rgba( 0, 250, 0, " + overlayAlpha + " )";
-var restColor = "rgba( 250, 0, 0, " + overlayAlpha + " )";
+var container = document.querySelector("#clockcontainer");
+container.style.width = container.style.height = BOXWIDTH + "px";
 
-var muted = false;
-var buttonClick = true;
-var logging = true;
-
-var masterVolume = .5;
-
-loadOptions();
-
-document.getElementById("buttonClickCheckbox").checked = buttonClick;
-document.getElementById("mutebutton").innerText = muted ? "Unmute Sounds" : "Mute Sounds";
-document.getElementById("volumeSlider").setAttribute("value", masterVolume*100);
+var clockShadow = document.querySelector("#clockshadow");
+clockShadow.width = clockShadow.height = CLOCKWIDTH;
 
 var workStartRotation = workEndRotation = restStartRotation = restEndRotation = null;
 var workStartTime = workEndTime = restStartTime = restEndTime = null;
+var timerStartTime = timerEndTime = null;
+var stopwatchStartTime = null;
+var working = resting = timing = stopwatching = false;
+const overlayAlpha = .3;
 
-var appcontainer = document.getElementById("appcontainer");
-appcontainer.style.width = BOXWIDTH + "px";
-appcontainer.style.height = BOXWIDTH + 210 + "px";
+// options that still need to be saved to local storage
+var logging = false;
+var restColor = "rgba( 250, 0, 0, " + overlayAlpha + " )";
+var workColor = "rgba( 0, 250, 0, " + overlayAlpha + " )";
+var timerColor = "rgba( 0, 0, 255, " + overlayAlpha + " )";
+var stopwatchColor = "rgba( 255, 0, 255, " + overlayAlpha + " )";
 
-var container = document.getElementById("clockcontainer");
-container.style.width = container.style.height = BOXWIDTH + "px";
+// Set option defaults prior to attempting to load options from local storage
+var mode = "Pomodoro";
+var muted = false;
+var buttonClick = true;
+var workLength = 15;  // minutes
+var restLength = 1;   // minutes
+var timerMinuteLength = 5;
+var timerSecondLength = 0;
+var masterVolume = .5;
 
-var clockFace = document.getElementById("clockface");
-var faceCtx = clockFace.getContext("2d");
-clockFace.width = clockFace.height = CLOCKWIDTH;
+loadOptions();  // from local storage ... defined in storage.js
 
-var clockShadow = document.getElementById("clockshadow");
-clockShadow.width = clockShadow.height = CLOCKWIDTH;
+let log = new Log();
+let face = new Face(CENTERX, CENTERY, CLOCKWIDTH);
+let hourHand = new Hand("black", 6, -CLOCKWIDTH / 2 + CLOCKWIDTH / 6, CENTERX, CENTERY, CLOCKWIDTH);
+let minuteHand = new Hand("black", 4, -CLOCKWIDTH / 2 + CLOCKWIDTH / 15, CENTERX, CENTERY, CLOCKWIDTH);
+let secondHand = new Hand("red", 2, -CLOCKWIDTH / 2 + CLOCKWIDTH / 30, CENTERX, CENTERY, CLOCKWIDTH);
 
-var hands = document.getElementById("hands");
-var handsCtx = hands.getContext("2d");
-hands.width = hands.height = CLOCKWIDTH;
+log.load();
 
-var overlay = document.getElementById("overlay");
-var overlayCtx = overlay.getContext("2d");
-overlay.width = overlay.height = CLOCKWIDTH;
+let workOverlay = new Overlay(CLOCKWIDTH);
+workOverlay.setColor(workColor);
 
+let restOverlay = new Overlay(CLOCKWIDTH);
+restOverlay.setColor(restColor);
 
-drawFace(faceCtx);
+let timerOverlay  = new Overlay(CLOCKWIDTH);
+timerOverlay.setColor(timerColor);
+
+face.draw();
 setInterval(refreshClock, 50);
+
+// Remove hider element
+
+document.querySelector(".hider").style.display = "none";
 
 function refreshClock() {
     var baseTime = new Date();
@@ -63,182 +74,114 @@ function refreshClock() {
     var minRotation = ((min * 360 / 60) + (sec * (360 / 60) / 60)) * Math.PI / 180;
     var secRotation = (sec * 360 / 60) * Math.PI / 180;
 
-    drawHands(handsCtx, hrRotation, minRotation, secRotation);
+    drawHands(hrRotation, minRotation, secRotation);
 
-    if (working && workEndTime < baseTime) {
-        if (!alarm1 && !muted) alarm1 = soundAlarm1();
-        document.getElementById("lcd").innerHTML = "BREAK TIME" + (muted ? " (MUTED)" : "") + "&#10;" + (baseTime.getSeconds() % 2 === 0 ? "PRESS 'START BREAKING'" : "");
-    } else
-        if (working && workEndTime > baseTime) {
-            let timeDiff = (workEndTime - baseTime) / 60 / 1000;
-            let minutesLeft = Math.trunc(timeDiff);
-            let secondsLeft = ("0" + (Math.trunc(timeDiff % 1 * 60).toString())).slice(-2);
-            document.getElementById("lcd").innerHTML = "WORKING" + (muted ? " (MUTED)" : "") + "&#10;" + minutesLeft + ":" + secondsLeft;
-        }
-
-    if (resting && restEndTime < baseTime) {
-        if (!alarm2 && !muted) alarm2 = soundAlarm2();
-        document.getElementById("lcd").innerHTML = "TIME TO WORK" + (muted ? " (MUTED)" : "") + "&#10;" + (baseTime.getSeconds() % 2 === 0 ? "PRESS 'START WORKING'" : "");
-    } else
-        if (resting && restEndTime > baseTime) {
-            let timeDiff = (restEndTime - baseTime) / 60 / 1000;
-            let minutesLeft = Math.trunc(timeDiff);
-            let secondsLeft = ("0" + (Math.trunc(timeDiff % 1 * 60).toString())).slice(-2);
-            document.getElementById("lcd").innerHTML = "TAKING A BREAK" + (muted ? " (MUTED)" : "") + "&#10;" + minutesLeft + ":" + secondsLeft;
-        }
-
-    if (working || resting) drawOverlays(overlayCtx, workStartRotation, workEndRotation, restStartRotation, restEndRotation);
-    if (!working && !resting) document.getElementById("lcd").innerHTML = "CLOCK MODE&#10;" + baseTime.toLocaleTimeString();
-}
-
-function drawFace(ctx) {
-    ctx.font = CLOCKWIDTH / 10 + "px Serif";
-
-    // draw circle
-    ctx.beginPath();
-    ctx.arc(CENTERX, CENTERY, CLOCKWIDTH / 2, 0, 2 * Math.PI, false);
-    ctx.fillStyle = 'white';
-    ctx.fill();
-    ctx.lineWidth = 2;
-    ctx.strokeStyle = '#000000';
-    ctx.stroke();
-
-    for (let degrees = 0; degrees < 360; degrees += 6) {
-        let rad = degrees * Math.PI / 180;
-        let tickLength = CLOCKWIDTH / 70;
-        ctx.lineWidth = 1;
-
-        if (degrees % 90 === 0) {
-            tickLength = CLOCKWIDTH / 20;
-            ctx.lineWidth = CLOCKWIDTH / 60;
-        }
-        else
-            if (degrees % 30 === 0) {
-                tickLength = CLOCKWIDTH / 40;
-                ctx.lineWidth = CLOCKWIDTH / 120;
-            }
-
-        let x1 = Math.cos(rad) * CLOCKWIDTH / 2 + CENTERX;
-        let y1 = Math.sin(rad) * CLOCKWIDTH / 2 + CENTERY;
-        let x2 = Math.cos(rad) * (CLOCKWIDTH / 2 - tickLength) + CENTERX;
-        let y2 = Math.sin(rad) * (CLOCKWIDTH / 2 - tickLength) + CENTERY;
-
-        ctx.beginPath();
-        ctx.moveTo(x1, y1);
-        ctx.lineTo(x2, y2);
-        ctx.stroke();
+    if (!working && !resting && !timing && !stopwatching) {
+        document.querySelector("#lcd").innerHTML = mode.toUpperCase() + " MODE&#10;" + baseTime.toLocaleTimeString();
+        // ?? return; ??
     }
 
-    // Draw face text
-    ctx.fillStyle = '#967A45';
-    ctx.fillText("XII", CLOCKWIDTH / 2 - 16, 30);
-    ctx.fillText("III", CLOCKWIDTH - 35, CLOCKWIDTH / 2 + 8);
-    ctx.fillText("VI", CLOCKWIDTH / 2 - 14, CLOCKWIDTH - 13);
-    ctx.fillText("IX", 13, CLOCKWIDTH / 2 + 8);
+    switch (mode) {
+        case "Pomodoro":
+            pomodoroLogic();
+        break;
 
-    ctx.font = "12px Serif";
-    ctx.fillText("Pomodoro", CLOCKWIDTH / 2 - 26, CLOCKWIDTH / 2 + 20);
-    ctx.fillText("by", CLOCKWIDTH / 2 - 5, CLOCKWIDTH / 2 + 30);
-    ctx.fillText("Coons", CLOCKWIDTH / 2 - 14, CLOCKWIDTH / 2 + 40);
+        case "Timer":
+            timerLogic();
+        break;
+
+        case "Stopwatch":
+            stopwatchLogic();
+        break;
+
+        default:
+            console.log("ERROR: mode error in refreshClock()")
+        break;
+    }
+
+
+    function pomodoroLogic(){
+        if (working && workEndTime < baseTime) {
+            if (!alarm1 && !muted) {
+                alarm1 = soundAlarm1();
+            }
+            document.querySelector("#led-red").classList.add("led-red-blink");
+            document.querySelector("#lcd").innerHTML = "BREAK TIME" + (muted ? " (MUTED)" : "") + "&#10;" + (baseTime.getSeconds() % 2 === 0 ? "PRESS 'START BREAKING'" : "");
+            if (log.last() != "End Work Alarm") {
+                log.add({"End Work Alarm": new Date()});
+            }
+        } else {
+            if (working && workEndTime > baseTime) {
+                let timeDiff = (workEndTime - baseTime) / 60 / 1000;
+                let minutesLeft = Math.trunc(timeDiff);
+                let secondsLeft = ("0" + (Math.trunc(timeDiff % 1 * 60).toString())).slice(-2);
+                document.querySelector("#lcd").innerHTML = "POMODORO WORKING" + (muted ? " (MUTED)" : "") + "&#10;" + minutesLeft + ":" + secondsLeft;
+            }
+        }
+
+        if (resting && restEndTime < baseTime) {
+            if (!alarm2 && !muted) {
+                alarm2 = soundAlarm2();
+            }
+            document.querySelector("#led-green").classList.add("led-green-blink");
+            document.querySelector("#lcd").innerHTML = "TIME TO WORK" + (muted ? " (MUTED)" : "") + "&#10;" + (baseTime.getSeconds() % 2 === 0 ? "PRESS 'START WORKING'" : "");
+            if (log.last() != "End Break Alarm") {
+                log.add({"End Break Alarm": new Date()});
+            }
+        } else {
+            if (resting && restEndTime > baseTime) {
+                let timeDiff = (restEndTime - baseTime) / 60 / 1000;
+                let minutesLeft = Math.trunc(timeDiff);
+                let secondsLeft = ("0" + (Math.trunc(timeDiff % 1 * 60).toString())).slice(-2);
+                document.querySelector("#lcd").innerHTML = "POMODORO BREAKING" + (muted ? " (MUTED)" : "") + "&#10;" + minutesLeft + ":" + secondsLeft;
+            }
+        }
+
+        if (working || resting) {
+            drawOverlays(workStartRotation, workEndRotation, restStartRotation, restEndRotation);
+        }
+    }
+
+    function timerLogic(){
+        if (timing && timerEndTime < baseTime) {
+            if (!alarm1 && !muted) {
+                alarm1 = soundAlarm1();
+            }
+            document.querySelector("#led-red").classList.add("led-red-blink");
+            document.querySelector("#lcd").innerHTML = "TIMING" + (muted ? " (MUTED)" : "") + "&#10;" + "0:00";
+
+        } else {
+            if (timing && timerEndTime > baseTime) {
+                let timeDiff = (timerEndTime - baseTime) / 60 / 1000;
+                let minutesLeft = Math.trunc(timeDiff);
+                let secondsLeft = Math.trunc(timeDiff % 1 * 60 + 1);
+                if (secondsLeft === 60) {minutesLeft++; secondsLeft = 0};
+                secondsLeft = ("0" + secondsLeft.toString()).slice(-2);
+                document.querySelector("#lcd").innerHTML = "TIMING" + (muted ? " (MUTED)" : "") + "&#10;" + minutesLeft + ":" + secondsLeft;
+            }
+        }
+        
+        if (timing) {
+            timerOverlay.clear();
+            timerOverlay.draw(timerStartRotation, timerEndRotation);
+        }
+    }
+
+    function stopwatchLogic(){
+        // is stopwatch running ? draw new overlay and update lcd : leave overlay alone
+
+    }
 }
 
-function drawHands(ctx, hrRotation, minRotation, secRotation) {
-    ctx.clearRect(0, 0, CLOCKWIDTH, CLOCKWIDTH);
-
-    ctx.fillStyle = 'black';
-    
-    // MINUTE HAND AXIS CIRCLE
-    ctx.resetTransform();
-    ctx.beginPath();
-    ctx.arc(CENTERX, CENTERY, 7, 0, 2 * Math.PI, false);
-    ctx.lineWidth = 1;
-    ctx.fill();
-    ctx.strokeStyle = '#000000';
-    ctx.stroke();
-
-    drawHand(ctx, hrRotation, 6, -CLOCKWIDTH / 2 + CLOCKWIDTH / 6);
-    drawHand(ctx, minRotation, 4, -CLOCKWIDTH / 2 + CLOCKWIDTH / 15);
-
-    ctx.fillStyle = 'red';
-    
-    // SECOND HAND AXIS CIRCLE
-    ctx.resetTransform();
-    ctx.beginPath();
-    ctx.arc(CENTERX, CENTERY, 3, 0, 2 * Math.PI, false);
-    ctx.lineWidth = 1;
-    ctx.fill();
-    ctx.strokeStyle = '#ff0000';
-    ctx.stroke();
-    
-    drawHand(ctx, secRotation, 2, -CLOCKWIDTH / 2 + CLOCKWIDTH / 30);
+function drawHands(hrRotation, minRotation, secRotation) {
+    hourHand.clear();  // clears all hands on canvas
+    hourHand.draw(hrRotation);
+    minuteHand.draw(minRotation);
+    secondHand.draw(secRotation);
 }
 
-function drawHand(ctx, rotation, handWidth, handLength) {
-    ctx.resetTransform();
-    ctx.translate(CENTERX, CENTERY);
-    ctx.rotate(rotation);
-    ctx.translate(-CENTERX, -CENTERY);
-    ctx.shadowBlur = 2;
-    ctx.shadowColor = "rgba(0,0,0,.3)";
-    ctx.shadowOffsetX = 3;
-    ctx.shadowOffsetY = 3;
-    ctx.fillRect(CENTERX - handWidth / 2, CENTERY, handWidth, handLength);
+function drawOverlays(workStartRotation, workEndRotation, restStartRotation, restEndRotation) {
+    workOverlay.clear();  // clears all overlays on canvas
+    workOverlay.draw(workStartRotation, workEndRotation);
+    restOverlay.draw(restStartRotation, restEndRotation);
 }
-
-function drawOverlays(ctx, workStartRotation, workEndRotation, restStartRotation, restEndRotation) {
-    ctx.clearRect(0, 0, CLOCKWIDTH, CLOCKWIDTH);
-    drawOverlay(ctx, workStartRotation, workEndRotation, workColor);
-    drawOverlay(ctx, restStartRotation, restEndRotation, restColor);
-}
-
-function drawOverlay(ctx, start, end, color) {
-    ctx.beginPath();
-    ctx.moveTo(CLOCKWIDTH / 2, CLOCKWIDTH / 2);
-    ctx.arc(CLOCKWIDTH / 2, CLOCKWIDTH / 2, CLOCKWIDTH / 2, start, end, false);
-    ctx.closePath();
-    ctx.fillStyle = color;
-    ctx.fill();
-}
-
-function calculateWorkRestRotations(starting) {
-    let baseTime = new Date(starting.getTime());
-    let sec = baseTime.getSeconds();
-
-    workStartTime = new Date(baseTime.getTime());
-    workEndTime = new Date(workStartTime.getTime());
-    let newWorkMinutes = workEndTime.getMinutes() + Number(workLength);
-    workEndTime.setMinutes(newWorkMinutes);
-
-    workStartRotation = ((workStartTime.getMinutes() * 360 / 60) + (sec * (360 / 60) / 60)) * Math.PI / 180 - Math.PI / 2;
-    workEndRotation = ((workEndTime.getMinutes() * 360 / 60) + (sec * (360 / 60) / 60)) * Math.PI / 180 - Math.PI / 2;
-
-    restStartTime = new Date(workEndTime.getTime());
-    restEndTime = new Date(restStartTime.getTime());
-    let newRestMinutes = restEndTime.getMinutes() + Number(restLength);
-    restEndTime.setMinutes(newRestMinutes);
-
-    restStartRotation = ((restStartTime.getMinutes() * 360 / 60) + (sec * (360 / 60) / 60)) * Math.PI / 180 - Math.PI / 2;
-    restEndRotation = ((restEndTime.getMinutes() * 360 / 60) + (sec * (360 / 60) / 60)) * Math.PI / 180 - Math.PI / 2;
-}
-
-function calculateRestWorkRotations(starting) {
-    let baseTime = new Date(starting);
-    let sec = baseTime.getSeconds();
-
-    restStartTime = new Date(baseTime.getTime());
-    restEndTime = new Date(restStartTime.getTime());
-    let newRestMinutes = restEndTime.getMinutes() + Number(restLength);
-    restEndTime.setMinutes(newRestMinutes);
-
-    restStartRotation = ((restStartTime.getMinutes() * 360 / 60) + (sec * (360 / 60) / 60)) * Math.PI / 180 - Math.PI / 2;
-    restEndRotation = ((restEndTime.getMinutes() * 360 / 60) + (sec * (360 / 60) / 60)) * Math.PI / 180 - Math.PI / 2;
-
-    workStartTime = new Date(restEndTime.getTime());
-    workEndTime = new Date(workStartTime.getTime());
-    let newWorkMinutes = workEndTime.getMinutes() + Number(workLength);
-    workEndTime.setMinutes(newWorkMinutes);
-
-    workStartRotation = ((workStartTime.getMinutes() * 360 / 60) + (sec * (360 / 60) / 60)) * Math.PI / 180 - Math.PI / 2;
-    workEndRotation = ((workEndTime.getMinutes() * 360 / 60) + (sec * (360 / 60) / 60)) * Math.PI / 180 - Math.PI / 2;
-}
-
